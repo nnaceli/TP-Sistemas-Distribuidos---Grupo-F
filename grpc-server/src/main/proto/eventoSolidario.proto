@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "usuario.proto";
+
+message EventoSolidario {
+  int32 id = 1; //no se debe mostrar en vista
+  string nombre = 2;
+  string descripcion = 3;
+  google.protobuf.Timestamp fecha = 4; // debe ser futura a la fecha de creacion
+  repeated UsuarioDTO miembros = 5;
+}
