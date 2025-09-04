@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+enum DonacionCategoria {
+  ROPA = 0;
+  ALIMENTOS = 1;
+  JUGUETES = 2;
+  UTILES_ESCOLARES = 3;
+}
+
+message Donacion {
+  int32 id = 1;
+  DonacionCategoria categoria = 2;
+  string descripcion = 3;
+  int32 cantidad = 4;
+  bool eliminado = 5;
+  // CAMPOS DE AUDITORIA - no se deben mostrar en la vista
+  google.protobuf.Timestamp fechaCreacion = 6;
+  string usernameCreacion = 7;
+  google.protobuf.Timestamp fechaModificacion = 8;
+  string usernameModificacion = 9;
+}
