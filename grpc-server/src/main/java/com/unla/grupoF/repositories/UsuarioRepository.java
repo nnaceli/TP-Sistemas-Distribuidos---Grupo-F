@@ -1,6 +1,6 @@
-package com.unla.grupoF.grpcserver.repositories;
+package com.unla.grupoF.repositories;
 
-import com.unla.grupoF.grpcserver.entities.Usuario;
+import com.unla.grupoF.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

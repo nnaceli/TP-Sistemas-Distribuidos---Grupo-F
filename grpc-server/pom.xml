@@ -75,6 +75,12 @@
             <artifactId>grpc-stub</artifactId>
             <version>1.75.0</version>
         </dependency>
+        <dependency> <!-- necesario para Java 9+ -->
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>annotations-api</artifactId>
+            <version>6.0.53</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

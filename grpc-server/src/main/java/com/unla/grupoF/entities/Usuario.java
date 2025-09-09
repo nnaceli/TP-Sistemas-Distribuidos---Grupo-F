@@ -1,4 +1,4 @@
-package com.unla.grupoF.grpcserver.entities;
+package com.unla.grupoF.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
