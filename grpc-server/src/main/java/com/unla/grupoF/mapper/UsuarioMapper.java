@@ -6,6 +6,9 @@ import com.unla.grupoF.service.UsuarioOuterClass;
 
 public class UsuarioMapper {
 
+    public UsuarioMapper() {
+    }
+
     public Roles toRoleEnum( UsuarioOuterClass.Rol rol) {
         try {
             return Roles.valueOf(rol.getNombre());

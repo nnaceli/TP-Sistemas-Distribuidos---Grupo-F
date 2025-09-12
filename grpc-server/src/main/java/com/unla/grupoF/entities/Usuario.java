@@ -1,7 +1,8 @@
 package com.unla.grupoF.entities;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
 @Data
