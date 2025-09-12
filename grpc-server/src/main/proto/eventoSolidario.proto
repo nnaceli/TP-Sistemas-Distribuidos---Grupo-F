@@ -10,3 +10,15 @@ message EventoSolidario {
   google.protobuf.Timestamp fecha = 4; // debe ser futura a la fecha de creacion
   repeated Usuario miembros = 5;
 }
+/*
+message EventoSolidarioListResponse {
+  repeated EventoSolidario eventos = 1;
+}
+
+service EventoSolidarioService {
+  rpc CreateEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc GetEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc UpdateEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc DeleteEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc ListEventoSolidarios (Empty) returns (EventoSolidarioListResponse);
+}*/

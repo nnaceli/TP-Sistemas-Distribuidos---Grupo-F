@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 enum DonacionCategoria {
   ROPA = 0;
   ALIMENTOS = 1;
@@ -20,3 +21,15 @@ message Donacion {
   google.protobuf.Timestamp fechaModificacion = 8;
   string usernameModificacion = 9;
 }
+/*
+message DonacionListResponse {
+  repeated Donacion donaciones = 1;
+}
+
+service DonacionService {
+  rpc CreateDonacion (Donacion) returns (Donacion);
+  rpc GetDonacion (Donacion) returns (Donacion);
+  rpc UpdateDonacion (Donacion) returns (Donacion);
+  rpc DeleteDonacion (Donacion) returns (Donacion);
+  rpc ListDonaciones (google.protobuf.Empty) returns (DonacionListResponse);
+}*/
