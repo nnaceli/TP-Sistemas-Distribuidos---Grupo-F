@@ -1003,10 +1003,10 @@ public final class UsuarioOuterClass {
             com.google.protobuf.MessageOrBuilder {
 
         /**
-         * <code>int32 id = 1;</code>
+         * <code>int64 id = 1;</code>
          * @return The id.
          */
-        int getId();
+        long getId();
 
         /**
          * <code>string username = 2;</code>
@@ -1154,7 +1154,7 @@ public final class UsuarioOuterClass {
                             break;
                         case 8: {
 
-                            id_ = input.readInt32();
+                            id_ = input.readInt64();
                             break;
                         }
                         case 18: {
@@ -1244,13 +1244,13 @@ public final class UsuarioOuterClass {
         }
 
         public static final int ID_FIELD_NUMBER = 1;
-        private int id_;
+        private long id_;
         /**
-         * <code>int32 id = 1;</code>
+         * <code>int64 id = 1;</code>
          * @return The id.
          */
         @java.lang.Override
-        public int getId() {
+        public long getId() {
             return id_;
         }
 
@@ -1533,8 +1533,8 @@ public final class UsuarioOuterClass {
         @java.lang.Override
         public void writeTo(com.google.protobuf.CodedOutputStream output)
                 throws java.io.IOException {
-            if (id_ != 0) {
-                output.writeInt32(1, id_);
+            if (id_ != 0L) {
+                output.writeInt64(1, id_);
             }
             if (!getUsernameBytes().isEmpty()) {
                 com.google.protobuf.GeneratedMessageV3.writeString(output, 2, username_);
@@ -1569,9 +1569,9 @@ public final class UsuarioOuterClass {
             if (size != -1) return size;
 
             size = 0;
-            if (id_ != 0) {
+            if (id_ != 0L) {
                 size += com.google.protobuf.CodedOutputStream
-                        .computeInt32Size(1, id_);
+                        .computeInt64Size(1, id_);
             }
             if (!getUsernameBytes().isEmpty()) {
                 size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, username_);
@@ -1647,7 +1647,8 @@ public final class UsuarioOuterClass {
             int hash = 41;
             hash = (19 * hash) + getDescriptor().hashCode();
             hash = (37 * hash) + ID_FIELD_NUMBER;
-            hash = (53 * hash) + getId();
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                    getId());
             hash = (37 * hash) + USERNAME_FIELD_NUMBER;
             hash = (53 * hash) + getUsername().hashCode();
             hash = (37 * hash) + NOMBRE_FIELD_NUMBER;
@@ -1800,7 +1801,7 @@ public final class UsuarioOuterClass {
             @java.lang.Override
             public Builder clear() {
                 super.clear();
-                id_ = 0;
+                id_ = 0L;
 
                 username_ = "";
 
@@ -1909,7 +1910,7 @@ public final class UsuarioOuterClass {
 
             public Builder mergeFrom(UsuarioOuterClass.Usuario other) {
                 if (other == UsuarioOuterClass.Usuario.getDefaultInstance()) return this;
-                if (other.getId() != 0) {
+                if (other.getId() != 0L) {
                     setId(other.getId());
                 }
                 if (!other.getUsername().isEmpty()) {
@@ -1971,33 +1972,33 @@ public final class UsuarioOuterClass {
                 return this;
             }
 
-            private int id_ ;
+            private long id_ ;
             /**
-             * <code>int32 id = 1;</code>
+             * <code>int64 id = 1;</code>
              * @return The id.
              */
             @java.lang.Override
-            public int getId() {
+            public long getId() {
                 return id_;
             }
             /**
-             * <code>int32 id = 1;</code>
+             * <code>int64 id = 1;</code>
              * @param value The id to set.
              * @return This builder for chaining.
              */
-            public Builder setId(int value) {
+            public Builder setId(long value) {
 
                 id_ = value;
                 onChanged();
                 return this;
             }
             /**
-             * <code>int32 id = 1;</code>
+             * <code>int64 id = 1;</code>
              * @return This builder for chaining.
              */
             public Builder clearId() {
 
-                id_ = 0;
+                id_ = 0L;
                 onChanged();
                 return this;
             }
@@ -5432,7 +5433,7 @@ public final class UsuarioOuterClass {
     static {
         java.lang.String[] descriptorData = {
                 "\n\rusuario.proto\"\007\n\005Empty\"\025\n\003Rol\022\016\n\006nombr" +
-                        "e\030\001 \001(\t\"\237\001\n\007Usuario\022\n\n\002id\030\001 \001(\005\022\020\n\010usern" +
+                        "e\030\001 \001(\t\"\237\001\n\007Usuario\022\n\n\002id\030\001 \001(\003\022\020\n\010usern" +
                         "ame\030\002 \001(\t\022\016\n\006nombre\030\003 \001(\t\022\020\n\010apellido\030\004 " +
                         "\001(\t\022\020\n\010telefono\030\005 \001(\t\022\020\n\010password\030\006 \001(\t\022" +
                         "\r\n\005email\030\007 \001(\t\022\021\n\003rol\030\010 \001(\0132\004.Rol\022\016\n\006act" +
@@ -5441,13 +5442,12 @@ public final class UsuarioOuterClass {
                         "elefono\030\005 \001(\t\022\r\n\005email\030\006 \001(\t\022\021\n\003rol\030\007 \001(" +
                         "\0132\004.Rol\"1\n\023UsuarioListResponse\022\032\n\010usuari" +
                         "os\030\001 \003(\0132\010.Usuario\"\034\n\010Username\022\020\n\010userna" +
-                        "me\030\001 \001(\t2\340\001\n\016UsuarioService\022)\n\rCreateUsu" +
+                        "me\030\001 \001(\t2\333\001\n\016UsuarioService\022)\n\rCreateUsu" +
                         "ario\022\013.UsuarioDTO\032\013.UsuarioDTO\022!\n\nGetUsu" +
                         "ario\022\t.Username\032\010.Usuario\022)\n\rUpdateUsuar" +
-                        "io\022\013.UsuarioDTO\032\013.UsuarioDTO\022\'\n\rDeleteUs" +
-                        "uario\022\013.UsuarioDTO\032\t.Username\022,\n\014ListUsu" +
-                        "arios\022\006.Empty\032\024.UsuarioListResponseb\006pro" +
-                        "to3"
+                        "io\022\013.UsuarioDTO\032\013.UsuarioDTO\022\"\n\rDeleteUs" +
+                        "uario\022\t.Username\032\006.Empty\022,\n\014ListUsuarios" +
+                        "\022\006.Empty\032\024.UsuarioListResponseb\006proto3"
         };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor
                 .internalBuildGeneratedFileFrom(descriptorData,

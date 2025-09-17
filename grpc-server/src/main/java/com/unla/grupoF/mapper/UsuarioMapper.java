@@ -62,4 +62,35 @@ public class UsuarioMapper {
                 .rol(toRoleEnum(usuarioDTO.getRol()))
                 .build();
     }
+
+
+    public UsuarioOuterClass.Usuario fromEntity( Usuario usuario) {
+
+        return UsuarioOuterClass.Usuario.newBuilder()
+                .setId(usuario.getId())
+                .setUsername(usuario.getUsername())
+                .setNombre(usuario.getNombre())
+                .setApellido(usuario.getApellido())
+                .setTelefono(usuario.getTelefono())
+                .setEmail(usuario.getEmail())
+                .setRol(toRolProtobuf(usuario.getRol()))
+                .setActivo(usuario.isActivo())
+                .setPassword(usuario.getClave())
+                .build();
+    }
+
+    public Usuario fromProtobuf( UsuarioOuterClass.Usuario usuarioProto) {
+
+        return Usuario.builder()
+                .id(usuarioProto.getId())
+                .username(usuarioProto.getUsername())
+                .nombre(usuarioProto.getNombre())
+                .apellido(usuarioProto.getApellido())
+                .telefono(usuarioProto.getTelefono())
+                .email(usuarioProto.getEmail())
+                .rol(toRoleEnum(usuarioProto.getRol()))
+                .activo(usuarioProto.getActivo())
+                .clave(usuarioProto.getPassword())
+                .build();
+    }
 }
