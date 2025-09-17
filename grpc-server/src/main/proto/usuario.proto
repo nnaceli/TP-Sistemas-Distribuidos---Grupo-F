@@ -7,7 +7,7 @@ message Rol {
 }
 
 message Usuario {
-  int32 id = 1;
+  int64 id = 1;
   string username = 2;
   string nombre = 3;
   string apellido = 4;
@@ -39,6 +39,6 @@ service UsuarioService {
   rpc CreateUsuario (UsuarioDTO) returns (UsuarioDTO);
   rpc GetUsuario (Username) returns (Usuario);
   rpc UpdateUsuario (UsuarioDTO) returns (UsuarioDTO);
-  rpc DeleteUsuario (UsuarioDTO) returns (Username);
+  rpc DeleteUsuario (Username) returns (Empty);
   rpc ListUsuarios (Empty) returns (UsuarioListResponse);
 }

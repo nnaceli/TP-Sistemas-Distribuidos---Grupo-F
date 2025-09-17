@@ -107,29 +107,29 @@ public final class UsuarioServiceGrpc {
         return getUpdateUsuarioMethod;
     }
 
-    private static volatile io.grpc.MethodDescriptor<UsuarioOuterClass.UsuarioDTO,
-            UsuarioOuterClass.Username> getDeleteUsuarioMethod;
+    private static volatile io.grpc.MethodDescriptor<UsuarioOuterClass.Username,
+            UsuarioOuterClass.Empty> getDeleteUsuarioMethod;
 
     @io.grpc.stub.annotations.RpcMethod(
             fullMethodName = SERVICE_NAME + '/' + "DeleteUsuario",
-            requestType = UsuarioOuterClass.UsuarioDTO.class,
-            responseType = UsuarioOuterClass.Username.class,
+            requestType = UsuarioOuterClass.Username.class,
+            responseType = UsuarioOuterClass.Empty.class,
             methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-    public static io.grpc.MethodDescriptor<UsuarioOuterClass.UsuarioDTO,
-            UsuarioOuterClass.Username> getDeleteUsuarioMethod() {
-        io.grpc.MethodDescriptor<UsuarioOuterClass.UsuarioDTO, UsuarioOuterClass.Username> getDeleteUsuarioMethod;
+    public static io.grpc.MethodDescriptor<UsuarioOuterClass.Username,
+            UsuarioOuterClass.Empty> getDeleteUsuarioMethod() {
+        io.grpc.MethodDescriptor<UsuarioOuterClass.Username, UsuarioOuterClass.Empty> getDeleteUsuarioMethod;
         if ((getDeleteUsuarioMethod = UsuarioServiceGrpc.getDeleteUsuarioMethod) == null) {
             synchronized (UsuarioServiceGrpc.class) {
                 if ((getDeleteUsuarioMethod = UsuarioServiceGrpc.getDeleteUsuarioMethod) == null) {
                     UsuarioServiceGrpc.getDeleteUsuarioMethod = getDeleteUsuarioMethod =
-                            io.grpc.MethodDescriptor.<UsuarioOuterClass.UsuarioDTO, UsuarioOuterClass.Username>newBuilder()
+                            io.grpc.MethodDescriptor.<UsuarioOuterClass.Username, UsuarioOuterClass.Empty>newBuilder()
                                     .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
                                     .setFullMethodName(generateFullMethodName(SERVICE_NAME, "DeleteUsuario"))
                                     .setSampledToLocalTracing(true)
                                     .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                                            UsuarioOuterClass.UsuarioDTO.getDefaultInstance()))
-                                    .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                                             UsuarioOuterClass.Username.getDefaultInstance()))
+                                    .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                                            UsuarioOuterClass.Empty.getDefaultInstance()))
                                     .setSchemaDescriptor(new UsuarioServiceMethodDescriptorSupplier("DeleteUsuario"))
                                     .build();
                 }
@@ -240,8 +240,8 @@ public final class UsuarioServiceGrpc {
 
         /**
          */
-        public void deleteUsuario(UsuarioOuterClass.UsuarioDTO request,
-                                  io.grpc.stub.StreamObserver<UsuarioOuterClass.Username> responseObserver) {
+        public void deleteUsuario(UsuarioOuterClass.Username request,
+                                  io.grpc.stub.StreamObserver<UsuarioOuterClass.Empty> responseObserver) {
             io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDeleteUsuarioMethod(), responseObserver);
         }
 
@@ -279,8 +279,8 @@ public final class UsuarioServiceGrpc {
                             getDeleteUsuarioMethod(),
                             io.grpc.stub.ServerCalls.asyncUnaryCall(
                                     new MethodHandlers<
-                                            UsuarioOuterClass.UsuarioDTO,
-                                            UsuarioOuterClass.Username>(
+                                            UsuarioOuterClass.Username,
+                                            UsuarioOuterClass.Empty>(
                                             this, METHODID_DELETE_USUARIO)))
                     .addMethod(
                             getListUsuariosMethod(),
@@ -333,8 +333,8 @@ public final class UsuarioServiceGrpc {
 
         /**
          */
-        public void deleteUsuario(UsuarioOuterClass.UsuarioDTO request,
-                                  io.grpc.stub.StreamObserver<UsuarioOuterClass.Username> responseObserver) {
+        public void deleteUsuario(UsuarioOuterClass.Username request,
+                                  io.grpc.stub.StreamObserver<UsuarioOuterClass.Empty> responseObserver) {
             io.grpc.stub.ClientCalls.asyncUnaryCall(
                     getChannel().newCall(getDeleteUsuarioMethod(), getCallOptions()), request, responseObserver);
         }
@@ -385,7 +385,7 @@ public final class UsuarioServiceGrpc {
 
         /**
          */
-        public UsuarioOuterClass.Username deleteUsuario(UsuarioOuterClass.UsuarioDTO request) {
+        public UsuarioOuterClass.Empty deleteUsuario(UsuarioOuterClass.Username request) {
             return io.grpc.stub.ClientCalls.blockingUnaryCall(
                     getChannel(), getDeleteUsuarioMethod(), getCallOptions(), request);
         }
@@ -438,8 +438,8 @@ public final class UsuarioServiceGrpc {
 
         /**
          */
-        public com.google.common.util.concurrent.ListenableFuture<UsuarioOuterClass.Username> deleteUsuario(
-                UsuarioOuterClass.UsuarioDTO request) {
+        public com.google.common.util.concurrent.ListenableFuture<UsuarioOuterClass.Empty> deleteUsuario(
+                UsuarioOuterClass.Username request) {
             return io.grpc.stub.ClientCalls.futureUnaryCall(
                     getChannel().newCall(getDeleteUsuarioMethod(), getCallOptions()), request);
         }
@@ -489,8 +489,8 @@ public final class UsuarioServiceGrpc {
                             (io.grpc.stub.StreamObserver<UsuarioOuterClass.UsuarioDTO>) responseObserver);
                     break;
                 case METHODID_DELETE_USUARIO:
-                    serviceImpl.deleteUsuario((UsuarioOuterClass.UsuarioDTO) request,
-                            (io.grpc.stub.StreamObserver<UsuarioOuterClass.Username>) responseObserver);
+                    serviceImpl.deleteUsuario((UsuarioOuterClass.Username) request,
+                            (io.grpc.stub.StreamObserver<UsuarioOuterClass.Empty>) responseObserver);
                     break;
                 case METHODID_LIST_USUARIOS:
                     serviceImpl.listUsuarios((UsuarioOuterClass.Empty) request,
