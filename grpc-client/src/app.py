@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_cors import CORS
 from Controllers.UsuarioController import usuario_bp
 
 app = Flask(__name__)
+CORS(app)  # Esto habilita CORS para todas las rutas
 
 baseUrl = "/api/client"
 

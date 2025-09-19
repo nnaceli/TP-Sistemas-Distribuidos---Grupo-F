@@ -1,19 +1,25 @@
-/* Contenedor general */
 .tabla-usuarios-container {
     padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #333;
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c2c2c;
+    width: 100vw;
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: 20px;
+    margin-right: 20px;
 }
-
 /* Título */
 .tabla-usuarios-container h2 {
     margin-bottom: 15px;
     font-size: 24px;
     font-weight: bold;
+    color: #3e2f1c;
 }
 
 /* Responsividad */
 .table-responsive {
+    width: 100%;
     overflow-x: auto;
 }
 
@@ -22,39 +28,41 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
 /* Encabezado */
 .tabla-usuarios thead {
-    background-color: #f4f4f4;
+    background-color: #d8c4b0;
 }
 
 .tabla-usuarios th {
     padding: 12px;
     text-align: left;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid #a89c91;
     font-weight: bold;
+    color: #3e2f1c;
 }
 
 /* Cuerpo */
 .tabla-usuarios td {
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e0d6cc;
+    color: #2c2c2c;
 }
 
 /* Filas alternadas */
 .tabla-usuarios tbody tr:nth-child(even) {
-    background-color: #fafafa;
+    background-color: #f7f3ef;
 }
 
 /* Estado activo/inactivo */
 .activo {
-    background-color: #e8fce8;
+    background-color: #f0e8dd;
 }
 
 .inactivo {
-    background-color: #fce8e8;
+    background-color: #f5e4e4;
 }
 
 /* Badge de estado */
@@ -63,16 +71,17 @@
     border-radius: 4px;
     font-weight: bold;
     display: inline-block;
+    font-size: 0.9em;
 }
 
 .estado-badge.activo {
-    background-color: #d4f4d4;
-    color: #2e7d32;
+    background-color: #d6cfc4;
+    color: #3e2f1c;
 }
 
 .estado-badge.inactivo {
-    background-color: #f4d4d4;
-    color: #c62828;
+    background-color: #e2c7c7;
+    color: #5c2c2c;
 }
 
 /* Badge de rol */
@@ -87,16 +96,46 @@
 
 /* Ejemplos de roles */
 .rol-badge.admin {
-    background-color: #e0e0ff;
-    color: #3f51b5;
+    background-color: #bfae9c;
+    color: #3e2f1c;
 }
 
 .rol-badge.user {
-    background-color: #e0f7fa;
-    color: #00796b;
+    background-color: #dcd2c4;
+    color: #4a3a2a;
 }
 
 .rol-badge.guest {
-    background-color: #fff3e0;
-    color: #ef6c00;
+    background-color: #e8e1d9;
+    color: #5c4b3b;
+}
+
+.btn-crear-usuario {
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background-color: #3e2f1c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-crear-usuario:hover {
+    background-color: #5a422c;
+}
+
+.btn-editar {
+    margin-left: 8px;
+    padding: 6px 10px;
+    background-color: #4a3a2a;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-editar:hover {
+    background-color: #6b4f3b;
 }

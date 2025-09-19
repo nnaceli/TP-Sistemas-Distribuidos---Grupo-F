@@ -1,17 +1,26 @@
-import Usuario from "../../Models/Usuario";
 import '../../CSS/UsuarioList.css';
-
+import { useNavigate } from 'react-router-dom';
+import { listarUsuarios } from "../../Service/UsuarioService";
+import React, { useEffect, useState } from 'react';
 
 export const ListaUsuarios = () => {
-    const usuarios = [
-    new Usuario(1, "Juan_Pico", "Juan", "Perez", "123456789", "sdsdsds", "email@email.com", "admin", true),
-    new Usuario(2, "Ana_G", "Ana", "Gomez", "987654321", "dsdsds", "ana@mail.com", "user", true),
-    new Usuario(3, "LUISm", "Luis", "Martinez", "456123789", "DDSDSD", "LUIS@mail.com", "user", false)
-    ];
- 
+    const navigate = useNavigate();
+    const [usuarios, setUsuarios] = useState([]);
+
+    useEffect(() => {
+        const fetchUsuarios = async () => {
+            const data = await listarUsuarios();
+            setUsuarios(data);
+        };
+        fetchUsuarios();
+    }, []);
+
     return (
         <div className="tabla-usuarios-container">
             <h2>Listado de Usuarios</h2>
+            <button className="btn-crear-usuario" onClick={() => navigate('/usuarios/nuevo')}>
+                Crear
+            </button>
             <div className="table-responsive">
                 <table className="tabla-usuarios">
                     <thead>
@@ -21,21 +30,20 @@ export const ListaUsuarios = () => {
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Teléfono</th>
-                            <th>Dirección</th>
                             <th>Email</th>
                             <th>Rol</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         {usuarios.map(usuario => (
                             <tr key={usuario.id} className={usuario.activo ? 'activo' : 'inactivo'}>
                                 <td>{usuario.id}</td>
-                                <td>@{usuario.username}</td>
+                                <td>{usuario.username}</td>
                                 <td>{usuario.nombre}</td>
                                 <td>{usuario.apellido}</td>
                                 <td>{usuario.telefono}</td>
-                                <td>{usuario.direccion}</td>
                                 <td>{usuario.email}</td>
                                 <td>
                                     <span className={`rol-badge ${usuario.rol}`}>
@@ -46,6 +54,20 @@ export const ListaUsuarios = () => {
                                     <span className={`estado-badge ${usuario.activo ? 'activo' : 'inactivo'}`}>
                                         {usuario.activo ? '🟢 Activo' : '🔴 Inactivo'}
                                     </span>
+                                </td>
+                                <td>
+                                    <button
+                                        className="btn-visualizar"
+                                        onClick={() => navigate(`/usuarios/${usuario.username}`)}
+                                    >
+                                        Detalles
+                                    </button>
+                                    <button
+                                        className="btn-editar"
+                                        onClick={() => navigate(`/usuarios/${usuario.username}/editar`)}
+                                    >
+                                        Editar
+                                    </button>
                                 </td>
                             </tr>
                         ))}

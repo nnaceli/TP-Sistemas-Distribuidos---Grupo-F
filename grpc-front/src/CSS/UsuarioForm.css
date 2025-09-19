@@ -1,0 +1,49 @@
+.formulario-usuario {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f7f3ef;
+    border: 1px solid #d8c4b0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 500px;
+}
+
+.formulario-usuario h3 {
+    margin: 0 0 10px;
+    color: #3e2f1c;
+    font-size: 20px;
+}
+
+.formulario-usuario input[type="text"],
+.formulario-usuario input[type="email"],
+.formulario-usuario input[type="password"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    color: #3e2f1c;
+}
+
+.formulario-usuario button {
+    padding: 10px;
+    background-color: #3e2f1c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.formulario-usuario button:hover {
+    background-color: #5a422c;
+}
+
