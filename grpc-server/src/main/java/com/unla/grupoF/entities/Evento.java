@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,4 +32,6 @@ public class Evento {
         inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<Usuario> miembros = new HashSet<>();
+
+  
 }
