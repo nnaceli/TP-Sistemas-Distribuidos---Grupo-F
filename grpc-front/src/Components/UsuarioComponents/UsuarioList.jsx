@@ -8,7 +8,7 @@ export const ListaUsuarios = () => {
     new Usuario(2, "Ana_G", "Ana", "Gomez", "987654321", "dsdsds", "ana@mail.com", "user", true),
     new Usuario(3, "LUISm", "Luis", "Martinez", "456123789", "DDSDSD", "LUIS@mail.com", "user", false)
     ];
-
+ 
     return (
         <div className="tabla-usuarios-container">
             <h2>Listado de Usuarios</h2>

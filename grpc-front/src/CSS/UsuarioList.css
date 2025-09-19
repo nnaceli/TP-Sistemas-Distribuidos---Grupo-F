@@ -1,176 +1,102 @@
+/* Contenedor general */
 .tabla-usuarios-container {
-    padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
 }
 
+/* Título */
 .tabla-usuarios-container h2 {
-    color: white;
-    margin-bottom: 2rem;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 300;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
+/* Responsividad */
 .table-responsive {
     overflow-x: auto;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
 }
 
+/* Tabla */
 .tabla-usuarios {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Encabezado */
+.tabla-usuarios thead {
+    background-color: #f4f4f4;
 }
 
 .tabla-usuarios th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1.2rem 1rem;
+    padding: 12px;
     text-align: left;
-    font-weight: 600;
-    color: white;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
 }
 
+/* Cuerpo */
 .tabla-usuarios td {
-    padding: 1.2rem 1rem;
-    border-bottom: 1px solid #e0e0e0;
-    color: #2d3748;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
 }
 
-.tabla-usuarios tr:last-child td {
-    border-bottom: none;
+/* Filas alternadas */
+.tabla-usuarios tbody tr:nth-child(even) {
+    background-color: #fafafa;
 }
 
-.tabla-usuarios tr:hover td {
-    background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+/* Estado activo/inactivo */
+.activo {
+    background-color: #e8fce8;
 }
 
-.tabla-usuarios tr.activo {
-    background: rgba(72, 187, 120, 0.05);
+.inactivo {
+    background-color: #fce8e8;
 }
 
-.tabla-usuarios tr.inactivo {
-    background: rgba(245, 101, 101, 0.05);
-}
-
-.rol-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: inline-block;
-    text-align: center;
-    min-width: 80px;
-}
-
-.rol-badge.admin {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.rol-badge.user {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
-}
-
+/* Badge de estado */
 .estado-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    min-width: 100px;
-    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
 }
 
 .estado-badge.activo {
-    background: rgba(72, 187, 120, 0.1);
-    color: #48bb78;
+    background-color: #d4f4d4;
+    color: #2e7d32;
 }
 
 .estado-badge.inactivo {
-    background: rgba(245, 101, 101, 0.1);
-    color: #f56565;
+    background-color: #f4d4d4;
+    color: #c62828;
 }
 
-.estado-circulo {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
+/* Badge de rol */
+.rol-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
     display: inline-block;
 }
 
-.estado-badge.activo .estado-circulo {
-    background: #48bb78;
-    box-shadow: 0 0 10px rgba(72, 187, 120, 0.5);
+/* Ejemplos de roles */
+.rol-badge.admin {
+    background-color: #e0e0ff;
+    color: #3f51b5;
 }
 
-.estado-badge.inactivo .estado-circulo {
-    background: #f56565;
-    box-shadow: 0 0 10px rgba(245, 101, 101, 0.5);
+.rol-badge.user {
+    background-color: #e0f7fa;
+    color: #00796b;
 }
 
-/* Efectos de transición suaves */
-.tabla-usuarios tr {
-    transition: all 0.3s ease;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .tabla-usuarios-container {
-        padding: 1rem;
-    }
-    
-    .tabla-usuarios-container h2 {
-        font-size: 1.5rem;
-    }
-    
-    .tabla-usuarios th,
-    .tabla-usuarios td {
-        padding: 0.8rem 0.6rem;
-        font-size: 0.85rem;
-    }
-    
-    .rol-badge,
-    .estado-badge {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-    }
-}
-
-/* Scrollbar personalizado para la tabla */
-.table-responsive::-webkit-scrollbar {
-    height: 8px;
-}
-
-.table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 4px;
-}
-
-.table-responsive::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+.rol-badge.guest {
+    background-color: #fff3e0;
+    color: #ef6c00;
 }

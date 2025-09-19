@@ -4,86 +4,108 @@ import os
 SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(SRC_DIR)
 
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from GrpcService.GrpcUsuarioService import crear_usuario, obtener_usuario, listar_usuarios, eliminar_usuario, actualizar_usuario
+from grpc import RpcError
 
-app = Flask(__name__)
+usuario_bp = Blueprint('usuario_bp', __name__)
 
-@app.route('/usuarios', methods=['POST'])
+@usuario_bp.route('/crear', methods=['POST'])
 def crear():
-    data = request.json
-    usuario = crear_usuario(
-        username=data['username'],
-        nombre=data['nombre'],
-        apellido=data['apellido'],
-        telefono=data['telefono'],
-        email=data['email'],
-        rol_nombre=data['rol']
-    )
-    return jsonify({
-        "username": usuario.username,
-        "nombre": usuario.nombre,
-        "apellido": usuario.apellido,
-        "telefono": usuario.telefono,
-        "email": usuario.email,
-        "rol": usuario.rol.nombre
-    })
-
-@app.route('/usuarios/<username>', methods=['GET'])
-def obtener(username):
-    usuario = obtener_usuario(username)
-    return jsonify({
-        "id": usuario.id,
-        "username": usuario.username,
-        "nombre": usuario.nombre,
-        "apellido": usuario.apellido,
-        "telefono": usuario.telefono,
-        "email": usuario.email,
-        "rol": usuario.rol.nombre,
-        "activo": usuario.activo
-    })
-
-@app.route('/usuarios', methods=['GET'])
-def listar():
-    usuarios = listar_usuarios()
-    resultado = []
-    for u in usuarios:
-        resultado.append({
-            "id": u.id,
-            "username": u.username,
-            "nombre": u.nombre,
-            "apellido": u.apellido,
-            "telefono": u.telefono,
-            "email": u.email,
-            "rol": u.rol.nombre,
-            "activo": u.activo
+    try:
+        data = request.json
+        usuario = crear_usuario(
+            username=data['username'],
+            nombre=data['nombre'],
+            apellido=data['apellido'],
+            telefono=data['telefono'],
+            email=data['email'],
+            rol_nombre=data['rol']
+        )
+        return jsonify({
+            "username": usuario.username,
+            "nombre": usuario.nombre,
+            "apellido": usuario.apellido,
+            "telefono": usuario.telefono,
+            "email": usuario.email,
+            "rol": usuario.rol.nombre
         })
-    return jsonify(resultado)
+    except RpcError as e:
+        mensaje = e.details() if e.details() else "Error al crear usuario"
+        return jsonify({"error": mensaje}), 404
 
-@app.route('/usuarios/<username>', methods=['DELETE'])
+@usuario_bp.route('/<username>', methods=['GET'])
+def obtener(username):
+    try:
+        usuario = obtener_usuario(username)
+        return jsonify({
+            "id": usuario.id,
+            "username": usuario.username,
+            "nombre": usuario.nombre,
+            "apellido": usuario.apellido,
+            "telefono": usuario.telefono,
+            "email": usuario.email,
+            "rol": usuario.rol.nombre,
+            "activo": usuario.activo
+        })
+   
+    except RpcError as e:
+        mensaje = e.details() if e.details() else "Usuario no encontrado"
+        return jsonify({"error": mensaje}), 404
+
+@usuario_bp.route('/listar', methods=['GET'])
+def listar():
+    try:
+        usuarios = listar_usuarios()
+        resultado = []
+        for u in usuarios:
+            resultado.append({
+                "id": u.id,
+                "username": u.username,
+                "nombre": u.nombre,
+                "apellido": u.apellido,
+                "telefono": u.telefono,
+                "email": u.email,
+                "rol": u.rol.nombre,
+                "activo": u.activo
+            })
+        return jsonify(resultado)
+
+    except RpcError as e:
+        mensaje = e.details() if e.details() else "Error al listar usuarios"
+        return jsonify({"error": mensaje}), 404
+
+@usuario_bp.route('/<username>', methods=['DELETE'])
 def eliminar(username):
-    eliminar_usuario(username)
-    return jsonify({"mensaje": f"Usuario {username} eliminado correctamente"})
+    try:
+        eliminar_usuario(username)
+        return jsonify({"mensaje": f"Usuario {username} eliminado correctamente"})
 
-@app.route('/usuarios/<username>', methods=['PUT'])
+    except RpcError as e:
+        mensaje = e.details() if e.details() else "Error al eliminar usuario"
+        return jsonify({"error": mensaje}), 404
+
+@usuario_bp.route('/<username>', methods=['PUT'])
 def actualizar(username):
-    data = request.json
-    usuario = actualizar_usuario(
-        username=username,
-        nombre=data['nombre'],
-        apellido=data['apellido'],
-        telefono=data['telefono'],
-        email=data['email'],
-        rol_nombre=data['rol']
-    )
-    return jsonify({
-        "username": usuario.username,
-        "nombre": usuario.nombre,
-        "apellido": usuario.apellido,
-        "telefono": usuario.telefono,
-        "email": usuario.email,
-        "rol": usuario.rol.nombre
-    })
+    try:
+        data = request.json
+        usuario = actualizar_usuario(
+            username=username,
+            nombre=data['nombre'],
+            apellido=data['apellido'],
+            telefono=data['telefono'],
+            email=data['email'],
+            rol_nombre=data['rol']
+        )
+        return jsonify({
+            "username": usuario.username,
+            "nombre": usuario.nombre,
+            "apellido": usuario.apellido,
+            "telefono": usuario.telefono,
+            "email": usuario.email,
+            "rol": usuario.rol.nombre
+        })
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    except RpcError as e:
+        mensaje = e.details() if e.details() else "Error al actualizar usuario"
+        return jsonify({"error": mensaje}), 404
