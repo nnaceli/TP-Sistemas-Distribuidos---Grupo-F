@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,11 +25,13 @@ public class Evento {
     @Column(nullable = false)
     private LocalDateTime fechaHora;
 
-    @ManyToMany
+    @ManyToMany( fetch = FetchType.EAGER) //Para que la bd cargue la clave foranea
     @JoinTable(
         name = "evento_usuarios",
         joinColumns = @JoinColumn(name = "evento_id"),
         inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private Set<Usuario> miembros = new HashSet<>();
+
+  
 }
