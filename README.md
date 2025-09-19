@@ -8,8 +8,19 @@ Integrantes
 
 
 Requisitos de instalación:
-+ Python - [version]
++ Python - 3.13.7
+  * asegurarse de tener la variable de entorno PATH configurada
+  * "pip install" grpcio, entre otras librerías necesarias
+  * "python app.py" para correr el servidor gRPC
 + Java - JDK 17
++ Maven - 3.9.6
+  * asegurarse de tener la variable de entorno PATH configurada
+  * "mvn clean install" para instalar las dependencias y compilar el proyecto
+  * Correr ServerApplcation.java para iniciar el servidor gRPC
++ React
+    * "npm install" para instalar las dependencias
+    * "npm run start" para correr la aplicación web
+    * https://localhost:3000 para acceder a la aplicación web
 + PostgreSQL 17 - default port 
    * se debe crear una base de datos bajo el nombre "empuje_comunitario_db"
 
