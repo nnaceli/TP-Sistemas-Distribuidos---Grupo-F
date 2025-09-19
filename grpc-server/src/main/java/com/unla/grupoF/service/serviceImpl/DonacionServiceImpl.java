@@ -2,10 +2,12 @@ package com.unla.grupoF.service.serviceImpl;
 
 import com.unla.grupoF.entities.Donacion;
 import com.unla.grupoF.mapper.DonacionMapper;
-import com.unla.grupoF.repositories.DonacionRepository;
+import com.unla.grupoF.repositories.IDonacionRepository;
 import com.unla.grupoF.service.DonacionOuterClass;
 import com.unla.grupoF.service.DonacionServiceGrpc;
 import com.google.protobuf.Empty;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +18,21 @@ import java.time.LocalDateTime;
 public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImplBase {
 
     @Autowired
-    private DonacionRepository repository;
+    private IDonacionRepository repository;
 
-    private DonacionMapper donacionMapper = new DonacionMapper();
+    private final DonacionMapper donacionMapper = new DonacionMapper();
 
     // alta
     @Override
     public void createDonacion(DonacionOuterClass.DonacionDTO request, StreamObserver<DonacionOuterClass.DonacionDTO> responseObserver) {
         try {
             if (request.getCantidad() < 0) {
-                responseObserver.onError(new Throwable("La cantidad no puede ser negativa"));
-                return;
+                throw new RuntimeException("La cantidad no puede ser negativa");
             }
 
             // Chequear que no exista otra donación con la misma descripción
             if (repository.findByDescripcion(request.getDescripcion()).isPresent()) {
-                responseObserver.onError(new Throwable("Ya existe una donación con esa descripción"));
-                return;
+                throw new RuntimeException("Ya existe una donación con esa descripción");
             }
 
             Donacion donacion = donacionMapper.toEntity(request);
@@ -46,7 +46,10 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al crear donación: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al crear donación: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -58,8 +61,7 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
 
             if (request.getCantidad() < 0) {
-                responseObserver.onError(new Throwable("La cantidad no puede ser negativa"));
-                return;
+                throw new RuntimeException("La cantidad no puede ser negativa");
             }
 
             donacion.setCantidad((int) request.getCantidad());
@@ -73,32 +75,35 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al modificar donación: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al modificar la donación: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
     //borrando buscando por id, en caso de que sea por descripcion hay que modificar el proto
-@Override
-public void deleteDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<Empty> responseObserver) {
+    @Override
+    public void deleteDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<Empty> responseObserver) {
 
-    try {
-        Donacion donacion = repository.findById(request.getId())
-                .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
+        try {
+            Donacion donacion = repository.findById(request.getId())
+                    .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
 
-        donacion.setEliminado(true);
-        donacion.setFechaModificacion(LocalDateTime.now());
-        donacion.setUsuarioModificacion("admin"); // TODO: reemplazar por el usuario real
-        repository.save(donacion);
+            donacion.setEliminado(true);
+            donacion.setFechaModificacion(LocalDateTime.now());
+            donacion.setUsuarioModificacion("admin"); // TODO: reemplazar por el usuario real
+            repository.save(donacion);
 
-        responseObserver.onNext(Empty.newBuilder().build());
-        responseObserver.onCompleted();
-
-    } catch (RuntimeException e) {
-        responseObserver.onError(new Throwable("Error al buscar la donación: " + e.getMessage()));
-    } catch (Exception ex) {
-        responseObserver.onError(new Throwable("Error al eliminar la donación: " + ex.getMessage()));
+            responseObserver.onNext(Empty.newBuilder().build());
+            responseObserver.onCompleted();
+        } catch (Exception ex) {
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al eliminar la donación: " + ex.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
+        }
     }
-}
 
     // LISTAR (solo las que no estan eliminadas)
     @Override
@@ -115,7 +120,25 @@ public void deleteDonacion(DonacionOuterClass.DonacionIdRequest request, StreamO
             responseObserver.onNext(lista.build());
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al listar donaciones: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al listar donaciones: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
+        }
+    }
+
+    @Override
+    public void getDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<DonacionOuterClass.Donacion> responseObserver) {
+        try {
+            Donacion donacion = repository.findById(request.getId())
+                    .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
+            responseObserver.onNext( donacionMapper.fromEntity(donacion) );
+            responseObserver.onCompleted();
+        } catch ( Exception e) {
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al buscar la donación: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 }

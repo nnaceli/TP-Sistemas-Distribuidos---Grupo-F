@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DonacionRepository extends JpaRepository<Donacion, Long> {
+public interface IDonacionRepository extends JpaRepository<Donacion, Long> {
 
     Optional<Donacion> findByDescripcion(String descripcion);
 

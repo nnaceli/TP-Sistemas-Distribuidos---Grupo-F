@@ -25,7 +25,7 @@ public class Evento {
     @Column(nullable = false)
     private LocalDateTime fechaHora;
 
-    @ManyToMany
+    @ManyToMany( fetch = FetchType.EAGER) //Para que la bd cargue la clave foranea
     @JoinTable(
         name = "evento_usuarios",
         joinColumns = @JoinColumn(name = "evento_id"),

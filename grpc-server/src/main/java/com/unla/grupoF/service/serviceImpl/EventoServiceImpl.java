@@ -3,11 +3,13 @@ package com.unla.grupoF.service.serviceImpl;
 import com.unla.grupoF.entities.Evento;
 import com.unla.grupoF.entities.Usuario;
 import com.unla.grupoF.mapper.EventoMapper;
-import com.unla.grupoF.repositories.EventoRepository;
+import com.unla.grupoF.repositories.IEventoRepository;
 import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.EventoSolidarioOuterClass;
 import com.unla.grupoF.service.EventoSolidarioServiceGrpc;
 import com.unla.grupoF.service.UsuarioOuterClass;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidarioServiceImplBase {
 
     @Autowired
-    private EventoRepository eventoRepository;
+    private IEventoRepository eventoRepository;
 
     @Autowired
     private IUsuarioRepository usuarioRepository;
@@ -41,8 +43,16 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
             );
 
             if (fechaEvento.isBefore(LocalDateTime.now())) {
-                responseObserver.onError(new Throwable("La fecha del evento debe ser futura"));
-                return;
+                throw new RuntimeException("La fecha del evento debe ser futura");
+            }
+
+            //chequear que los miembros existan
+            if (!request.getMiembrosList().isEmpty()) {
+                for (UsuarioOuterClass.Usuario usuarioProto : request.getMiembrosList()) {
+                    if (usuarioRepository.findByUsername(usuarioProto.getUsername()).isEmpty()) {
+                        throw new RuntimeException("Usuario no encontrado: " + usuarioProto.getUsername());
+                    }
+                }
             }
 
             Evento evento = eventoMapper.toEntity(request);
@@ -53,7 +63,10 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al crear evento: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al crear evento: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -67,7 +80,10 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
             responseObserver.onNext(eventoMapper.fromEntity(evento));
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al obtener evento: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al obtener evento: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -87,8 +103,7 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
 
             if (fechaEvento.isBefore(LocalDateTime.now())) {
                 // TODO: Registrar donaciones repartidas
-                responseObserver.onError(new Throwable("El evento ya pasó, registrar donaciones"));
-                return;
+                throw new RuntimeException("El evento ya pasó, registrar donaciones");
             }
 
             evento.setDescripcion(request.getDescripcion());
@@ -108,7 +123,10 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al actualizar evento: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al actualizar evento: "+ e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -120,16 +138,18 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
             if (evento.getFechaHora().isBefore(LocalDateTime.now())) {
-                responseObserver.onError(new Throwable("No se pueden eliminar eventos pasados"));
-                return;
+                throw new Throwable("No se pueden eliminar eventos pasados");
             }
 
             eventoRepository.delete(evento);
 
             responseObserver.onNext(eventoMapper.fromEntity(evento));
             responseObserver.onCompleted();
-        } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al eliminar evento: " + e.getMessage()));
+        } catch (Throwable e) {
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al eliminar evento: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -147,7 +167,10 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
         responseObserver.onNext(response.build());
         responseObserver.onCompleted();
     } catch (Exception e) {
-        responseObserver.onError(new Throwable("Error al listar eventos: " + e.getMessage()));
+        StatusRuntimeException statusException = Status.NOT_FOUND
+                .withDescription("Error al listar eventos: " + e.getMessage())
+                .asRuntimeException();
+        responseObserver.onError(statusException);
     }
 }
 
