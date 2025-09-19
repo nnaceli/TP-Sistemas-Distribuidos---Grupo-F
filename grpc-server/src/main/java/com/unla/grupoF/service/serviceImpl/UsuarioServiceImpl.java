@@ -5,6 +5,8 @@ import com.unla.grupoF.mapper.UsuarioMapper;
 import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.UsuarioOuterClass;
 import com.unla.grupoF.service.UsuarioServiceGrpc;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,10 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
         //Chequear que no exista un usuario con el mismo username o email
         if (repository.findByUsername(request.getEmail()).isPresent() ||
                 repository.findByEmail(request.getEmail()).isPresent()) {
-            responseObserver.onError(new Throwable("El username o email ya existe"));
+            StatusRuntimeException statusException = Status.ALREADY_EXISTS
+                    .withDescription("El username o email ya existe")
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
         Usuario usuario = usuarioMapper.toEntity(request);
         //TODO: generacion de clave encriptada con un password encoder
@@ -43,13 +48,22 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
     public void updateUsuario(UsuarioOuterClass.UsuarioDTO request, StreamObserver<UsuarioOuterClass.UsuarioDTO> responseObserver) {
         //TODO: chequear el rol PRESIDENTE del responseObserver (el admin)
         if (request.getUsername().isEmpty()) {
-            responseObserver.onError(new Throwable("Falta el username del usuario a modificar"));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Falta el username del usuario a modificar")
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         } else if (repository.findByUsername(request.getUsername()).isEmpty()) {
-            responseObserver.onError(new Throwable("El usuario no existe"));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("El usuario no existe")
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         } else if (request.getEmail().isEmpty() || request.getNombre().isEmpty() || request.getApellido().isEmpty()
                 || request.getTelefono().isEmpty() || request.getRol().getNombre().isEmpty()
         ) {
-            responseObserver.onError(new Throwable("Faltan campos a modificar"));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Faltan campos a modificar")
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         } else {
             Usuario usuario = usuarioMapper.toEntity(request);
             usuario.setClave(repository.findByUsername(request.getUsername()).get().getClave()); // mantener la clave actual
@@ -72,9 +86,15 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
             responseObserver.onNext(UsuarioOuterClass.Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (RuntimeException e) {
-            responseObserver.onError(new Throwable("Error al buscar el usuario: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al buscar el usuario: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         } catch (Exception ex) {
-            responseObserver.onError(new Throwable("Error al eliminar el usuario: " + ex.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al eliminar el usuario: " + ex.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -93,7 +113,10 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
             responseObserver.onNext(listUsuarios.build());
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al listar los usuarios: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al listar los usuarios: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
     }
 
@@ -103,12 +126,15 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
         try {
             repository.findByUsername(request.getUsername());
             Usuario usuario = repository.findByUsername(request.getUsername())
-                    .orElseThrow(() -> new Exception("Usuario con ese username no encontrado"));
+                    .orElseThrow(() -> new Exception("Usuario con username: "+ request.getUsername() + " no encontrado"));
 
             responseObserver.onNext(usuarioMapper.fromEntity(usuario));
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(new Throwable("Error al buscar el usuario: " + e.getMessage()));
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al buscar el usuario: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
         }
 
     }

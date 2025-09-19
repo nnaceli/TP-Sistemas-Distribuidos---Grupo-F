@@ -1,0 +1,63 @@
+.usuario-detalle-container {
+    padding: 30px;
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c2c2c;
+}
+
+.usuario-detalle-card {
+    background-color: #f7f3ef;
+    border: 1px solid #d8c4b0;
+    border-radius: 6px;
+    padding: 20px;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+.usuario-detalle-card p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.btn-volver {
+    padding: 10px 16px;
+    background-color: #3e2f1c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-volver:hover {
+    background-color: #5a422c;
+}
+
+.btn-visualizar {
+    padding: 6px 10px;
+    background-color: #6b4f3b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-visualizar:hover {
+    background-color: #8a6a4f;
+}
+
+.btn-eliminar {
+    padding: 10px 16px;
+    background-color: #a94442;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.btn-eliminar:hover {
+    background-color: #c9302c;
+}
