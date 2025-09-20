@@ -6,6 +6,9 @@ import com.unla.grupoF.repositories.IDonacionRepository;
 import com.unla.grupoF.service.DonacionOuterClass;
 import com.unla.grupoF.service.DonacionServiceGrpc;
 import com.google.protobuf.Empty;
+import com.unla.grupoF.utils.LoginInterceptor;
+import com.unla.grupoF.utils.SecurityUtil;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -13,6 +16,7 @@ import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @GRpcService
 public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImplBase {
@@ -20,11 +24,15 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     @Autowired
     private IDonacionRepository repository;
 
+    @Autowired
+    private SecurityUtil securityUtil;
+
     private final DonacionMapper donacionMapper = new DonacionMapper();
 
     // alta
     @Override
     public void createDonacion(DonacionOuterClass.DonacionDTO request, StreamObserver<DonacionOuterClass.DonacionDTO> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "VOCAL"));
         try {
             if (request.getCantidad() < 0) {
                 throw new RuntimeException("La cantidad no puede ser negativa");
@@ -56,6 +64,8 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     // modificar (buscando por descripcion)
     @Override
     public void updateDonacion(DonacionOuterClass.DonacionDTO request, StreamObserver<DonacionOuterClass.DonacionDTO> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "VOCAL"));
+
         try {
             Donacion donacion = repository.findByDescripcion(request.getDescripcion())
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
@@ -85,6 +95,7 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     //borrando buscando por id, en caso de que sea por descripcion hay que modificar el proto
     @Override
     public void deleteDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<Empty> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "VOCAL"));
 
         try {
             Donacion donacion = repository.findById(request.getId())
@@ -109,6 +120,8 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     @Override
     public void listDonaciones(Empty request,
                                StreamObserver<DonacionOuterClass.DonacionListResponse> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "VOCAL"));
+
         try {
             DonacionOuterClass.DonacionListResponse.Builder lista = DonacionOuterClass.DonacionListResponse.newBuilder();
             repository.findAll().stream()
@@ -129,6 +142,8 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
 
     @Override
     public void getDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<DonacionOuterClass.Donacion> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "VOCAL"));
+
         try {
             Donacion donacion = repository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));

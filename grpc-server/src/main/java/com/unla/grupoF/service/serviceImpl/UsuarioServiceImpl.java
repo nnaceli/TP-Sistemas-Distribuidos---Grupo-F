@@ -6,12 +6,17 @@ import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.UsuarioOuterClass;
 import com.unla.grupoF.service.UsuarioServiceGrpc;
 import com.unla.grupoF.utils.EmailService;
+import com.unla.grupoF.utils.LoginInterceptor;
 import com.unla.grupoF.utils.SecurityUtil;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.util.Set;
 
 @GRpcService
 public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBase {
@@ -22,13 +27,17 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
    @Autowired
    private EmailService emailService;
 
+   private SecurityUtil securityUtil = new SecurityUtil();
+
     private UsuarioMapper usuarioMapper = new UsuarioMapper();
+
+    public UsuarioServiceImpl() throws IOException {
+    }
 
     //ALTA (recibe DTO de la vista, genera clave, guarda Usuario en la bdd y devuelve DTO))
     @Override
     public void createUsuario(UsuarioOuterClass.UsuarioDTO request, StreamObserver<UsuarioOuterClass.UsuarioDTO> responseObserver) {
-        //TODO: chequear el rol PRESIDENTE del responseObserver (el admin)
-
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE"));
         //Chequear que no exista un usuario con el mismo username o email
         if (repository.findByUsername(request.getEmail()).isPresent() ||
                 repository.findByEmail(request.getEmail()).isPresent()) {
@@ -41,8 +50,8 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
         Usuario usuario = usuarioMapper.toEntity(request);
 
         // Generar una clave aleatoria
-        String claveGenerada = SecurityUtil.randomPassword(8); // longitud de 8 caracteres
-        usuario.setClave(SecurityUtil.encodePassword( claveGenerada ) );
+        String claveGenerada = securityUtil.randomPassword(8); // longitud de 8 caracteres
+        usuario.setClave( securityUtil.encodePassword( claveGenerada ) );
 
         usuario.setActivo(true); // por defecto activo
         Usuario savedUsuario = repository.save(usuario);
@@ -67,7 +76,7 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
     //MODIFICACION (todos los campos excepto la clave, devuelve DTO)
     @Override
     public void updateUsuario(UsuarioOuterClass.UsuarioDTO request, StreamObserver<UsuarioOuterClass.UsuarioDTO> responseObserver) {
-        //TODO: chequear el rol PRESIDENTE del responseObserver (el admin)
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE"));
         if (request.getUsername().isEmpty()) {
             StatusRuntimeException statusException = Status.NOT_FOUND
                     .withDescription("Falta el username del usuario a modificar")
@@ -98,7 +107,7 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
     //BAJA (solo baja lógica)
     @Override
     public void deleteUsuario(UsuarioOuterClass.Username request, StreamObserver<UsuarioOuterClass.Empty> responseObserver) {
-
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE"));
         try {
             Usuario usuario = repository.findByUsername(request.getUsername())
                     .orElseThrow(() -> new RuntimeException("Usuario con ese username no encontrado"));
@@ -122,6 +131,7 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
     //TRAER USUARIOS (todos los que esten activos)
     @Override
     public void listUsuarios(UsuarioOuterClass.Empty request, StreamObserver<UsuarioOuterClass.UsuarioListResponse> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE"));
         try {
             UsuarioOuterClass.UsuarioListResponse.Builder listUsuarios = UsuarioOuterClass.UsuarioListResponse.newBuilder();
             repository.findAll().stream()
@@ -144,6 +154,7 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
 
     @Override
     public void getUsuario(UsuarioOuterClass.Username request, StreamObserver<UsuarioOuterClass.Usuario> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE"));
         try {
             repository.findByUsername(request.getUsername());
             Usuario usuario = repository.findByUsername(request.getUsername())

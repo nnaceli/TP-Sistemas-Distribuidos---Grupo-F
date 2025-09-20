@@ -8,6 +8,9 @@ import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.EventoSolidarioOuterClass;
 import com.unla.grupoF.service.EventoSolidarioServiceGrpc;
 import com.unla.grupoF.service.UsuarioOuterClass;
+import com.unla.grupoF.utils.LoginInterceptor;
+import com.unla.grupoF.utils.SecurityUtil;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -29,12 +32,17 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtil securityUtil;
+
     private final EventoMapper eventoMapper = new EventoMapper();
 
     // CREAR EVENTO
     @Override
     public void createEventoSolidario(EventoSolidarioOuterClass.EventoSolidarioDTO request,
                                       StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "COORDINADOR"));
+
         try {
             LocalDateTime fechaEvento = LocalDateTime.ofEpochSecond(
                     request.getFecha().getSeconds(),
@@ -73,6 +81,7 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     @Override
     public void getEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
                                    StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "COORDINADOR"));
         try {
             Evento evento = eventoRepository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
@@ -90,6 +99,7 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     // MODIFICAR EVENTO
     @Override
     public void updateEventoSolidario(EventoSolidarioOuterClass.EventoSolidarioDTO request, StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "COORDINADOR", "VOLUNTARIO"));
         try {
             // Buscamos por nombre como identificador (porque DTO no trae id)
             Evento evento = eventoRepository.findByNombreEvento(request.getNombre())
@@ -133,6 +143,7 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     // ELIMINAR EVENTO 
     @Override
     public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request, StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
+        securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "COORDINADOR"));
         try {
             Evento evento = eventoRepository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
@@ -156,7 +167,8 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     // LISTAR EVENTOS
    @Override
     public void listEventoSolidarios(UsuarioOuterClass.Empty request, StreamObserver<EventoSolidarioOuterClass.EventoSolidarioListResponse> responseObserver) {
-    try {
+       securityUtil.hasRole(Context.key(LoginInterceptor.ROL_HEADER_KEY.name()).toString(), Set.of("PRESIDENTE", "COORDINADOR", "VOLUNTARIO"));
+        try {
         List<Evento> eventos = eventoRepository.findAll();
 
         EventoSolidarioOuterClass.EventoSolidarioListResponse.Builder response =

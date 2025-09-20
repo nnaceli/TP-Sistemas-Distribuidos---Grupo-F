@@ -1,11 +1,21 @@
 package com.unla.grupoF.utils;
 
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Getter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 
 //Componente para manejo de seguridad:
@@ -16,20 +26,38 @@ import java.util.Random;
 public class SecurityUtil {
 
     @Getter
-    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public SecurityUtil(){
+    @Value("${jwt.secret}")
+    private String secret;
+
+    public SecurityUtil() throws IOException {
+        passwordEncoder = new BCryptPasswordEncoder();
+        Properties properties = new Properties();
+        properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        secret = properties.getProperty("jwt.secret"); //no lo tomaba del @Value
     }
 
-    public static String encodePassword(String rawPassword) {
+
+    private Key getSigningKey() {
+        return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
+    }
+
+    //PERMISOS
+    public boolean hasRole(String userRole, Set<String> requiredRole) {
+        return requiredRole.contains(userRole);
+    }
+
+    // CONTRASEÑA
+    public String encodePassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
 
-    public static boolean checkPassword(String rawPassword, String encodedPasswordFromStorage) {
+    public boolean checkPassword(String rawPassword, String encodedPasswordFromStorage) {
         return passwordEncoder.matches(rawPassword, encodedPasswordFromStorage);
     }
 
-    public static String randomPassword(int len) {
+    public String randomPassword(int len) {
         String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random rnd = new Random();
 
@@ -38,5 +66,35 @@ public class SecurityUtil {
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         }
         return sb.toString();
+    }
+
+    //JWT (Json Web Token)
+
+    public String generateToken(String username, String rol) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("rol", rol)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // una hora
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public String getRolFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("rol", String.class);
     }
 }
