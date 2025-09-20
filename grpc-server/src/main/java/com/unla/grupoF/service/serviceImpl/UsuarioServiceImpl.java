@@ -5,6 +5,8 @@ import com.unla.grupoF.mapper.UsuarioMapper;
 import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.UsuarioOuterClass;
 import com.unla.grupoF.service.UsuarioServiceGrpc;
+import com.unla.grupoF.utils.EmailService;
+import com.unla.grupoF.utils.SecurityUtil;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -16,6 +18,9 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
 
     @Autowired
     private IUsuarioRepository repository;
+
+   @Autowired
+   private EmailService emailService;
 
     private UsuarioMapper usuarioMapper = new UsuarioMapper();
 
@@ -31,14 +36,30 @@ public class UsuarioServiceImpl extends UsuarioServiceGrpc.UsuarioServiceImplBas
                     .withDescription("El username o email ya existe")
                     .asRuntimeException();
             responseObserver.onError(statusException);
+            return;
         }
         Usuario usuario = usuarioMapper.toEntity(request);
-        //TODO: generacion de clave encriptada con un password encoder
-        usuario.setClave("clave-encriptada"); // modificar luego
+
+        // Generar una clave aleatoria
+        String claveGenerada = SecurityUtil.randomPassword(8); // longitud de 8 caracteres
+        usuario.setClave(SecurityUtil.encodePassword( claveGenerada ) );
+
         usuario.setActivo(true); // por defecto activo
         Usuario savedUsuario = repository.save(usuario);
         UsuarioOuterClass.UsuarioDTO response = usuarioMapper.toDTO(savedUsuario);
-        //TODO: triggear mandar contraseña por mail
+
+        //Enviarla por mail al usuario
+        try {
+            emailService.sendNewPassword(usuario.getEmail(), claveGenerada);
+        } catch (Exception e) {
+            // si no se pudo enviar el mail, eliminar el usuario creado
+            repository.delete( usuario);
+            StatusRuntimeException statusException = Status.ABORTED
+                    .withDescription(e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
+            return;
+        }
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
