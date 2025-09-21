@@ -45,6 +45,8 @@ public class SecurityUtil {
 
     //PERMISOS
     public boolean hasRole(String userRole, Set<String> requiredRole) {
+        System.out.println("Verificando si el rol " + userRole + " esta en " + requiredRole);
+
         return requiredRole.contains(userRole);
     }
 

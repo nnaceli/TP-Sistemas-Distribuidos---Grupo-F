@@ -69,6 +69,12 @@
             <version>4.5.4</version>
         </dependency>
 
+<!--        For token readability-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
         <dependency> <!-- necesario para Java 9+ -->
             <groupId>org.apache.tomcat</groupId>
             <artifactId>annotations-api</artifactId>
