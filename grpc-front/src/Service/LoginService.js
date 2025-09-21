@@ -19,6 +19,7 @@ export const loginUsuario = async (username, password) => {
 
         const data = await response.json();
         const userSession = new UserSession(data.token, data.username, data.rol);
+        console.log(userSession);
         return userSession;
     } catch (error) {
         console.error('Error en loginUsuario:', error);

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import login_pb2 as login__pb2
+import login_pb2 as Login_dot_login__pb2
 
 
 class LoginServiceStub(object):
@@ -16,8 +16,8 @@ class LoginServiceStub(object):
         """
         self.Login = channel.unary_unary(
                 '/LoginService/Login',
-                request_serializer=login__pb2.LoginRequest.SerializeToString,
-                response_deserializer=login__pb2.LoginResponse.FromString,
+                request_serializer=Login_dot_login__pb2.LoginRequest.SerializeToString,
+                response_deserializer=Login_dot_login__pb2.LoginResponse.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_LoginServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Login': grpc.unary_unary_rpc_method_handler(
                     servicer.Login,
-                    request_deserializer=login__pb2.LoginRequest.FromString,
-                    response_serializer=login__pb2.LoginResponse.SerializeToString,
+                    request_deserializer=Login_dot_login__pb2.LoginRequest.FromString,
+                    response_serializer=Login_dot_login__pb2.LoginResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +60,7 @@ class LoginService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/LoginService/Login',
-            login__pb2.LoginRequest.SerializeToString,
-            login__pb2.LoginResponse.FromString,
+            Login_dot_login__pb2.LoginRequest.SerializeToString,
+            Login_dot_login__pb2.LoginResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

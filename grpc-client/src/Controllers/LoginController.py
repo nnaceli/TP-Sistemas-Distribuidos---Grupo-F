@@ -20,8 +20,8 @@ def login_route():
         )
         return jsonify({
             "token": respuesta.token,
-            "username": respuesta.username,
-            "rol": respuesta.rol
+            "username": respuesta.username.username,
+            "rol": respuesta.rol.nombre,
         })
     except RpcError as e:
         mensaje = e.details() if e.details() else "Error en el login"

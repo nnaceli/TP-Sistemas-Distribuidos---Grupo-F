@@ -2,16 +2,28 @@ import Usuario from '../Models/Usuario';
 
 const BASE_URL = 'http://127.0.0.1:5000/api/client/usuarios';
 
+// Helper para obtener el token actual
+const getAuthHeaders = () => {
+    const token = JSON.parse(localStorage.getItem('userSession'))?.token;
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+};
+
 export const listarUsuarios = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/listar`);
+        const response = await fetch(`${BASE_URL}/listar`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
         if (!response.ok) {
             throw new Error('Error al obtener usuarios');
         }
 
         const data = await response.json();
 
-        // Convertimos cada objeto plano en una instancia de Usuario
         const usuarios = data.map(u => new Usuario(
             u.id,
             u.username,
@@ -35,9 +47,7 @@ export const crearUsuario = async (usuarioData) => {
     try {
         const response = await fetch(`${BASE_URL}/crear`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(usuarioData)
         });
 
@@ -56,7 +66,11 @@ export const crearUsuario = async (usuarioData) => {
 
 export const obtenerUsuarioPorUsername = async (username) => {
     try {
-        const response = await fetch(`${BASE_URL}/${username}`);
+        const response = await fetch(`${BASE_URL}/${username}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error?.error || 'Error al obtener usuario');
@@ -86,7 +100,8 @@ export const obtenerUsuarioPorUsername = async (username) => {
 export const eliminarUsuario = async (username) => {
     try {
         const response = await fetch(`${BASE_URL}/${username}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: getAuthHeaders()
         });
 
         if (!response.ok) {
@@ -106,9 +121,7 @@ export const actualizarUsuario = async (username, usuarioData) => {
     try {
         const response = await fetch(`${BASE_URL}/${username}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify(usuarioData)
         });
 
