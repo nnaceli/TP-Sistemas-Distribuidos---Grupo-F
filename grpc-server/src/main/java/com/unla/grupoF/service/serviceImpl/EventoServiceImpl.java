@@ -8,6 +8,9 @@ import com.unla.grupoF.repositories.IUsuarioRepository;
 import com.unla.grupoF.service.EventoSolidarioOuterClass;
 import com.unla.grupoF.service.EventoSolidarioServiceGrpc;
 import com.unla.grupoF.service.UsuarioOuterClass;
+import com.unla.grupoF.utils.LoginInterceptor;
+import com.unla.grupoF.utils.SecurityUtil;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -29,6 +32,9 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtil securityUtil;
+
     private final EventoMapper eventoMapper = new EventoMapper();
 
     // CREAR EVENTO
@@ -36,6 +42,11 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     public void createEventoSolidario(EventoSolidarioOuterClass.EventoSolidarioDTO request,
                                       StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "COORDINADOR"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
             LocalDateTime fechaEvento = LocalDateTime.ofEpochSecond(
                     request.getFecha().getSeconds(),
                     request.getFecha().getNanos(),
@@ -74,6 +85,12 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     public void getEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
                                    StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "COORDINADOR"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             Evento evento = eventoRepository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
@@ -91,6 +108,11 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     @Override
     public void updateEventoSolidario(EventoSolidarioOuterClass.EventoSolidarioDTO request, StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "COORDINADOR", "VOLUNTARIO"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
             // Buscamos por nombre como identificador (porque DTO no trae id)
             Evento evento = eventoRepository.findByNombreEvento(request.getNombre())
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
@@ -124,7 +146,7 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
             responseObserver.onCompleted();
         } catch (Exception e) {
             StatusRuntimeException statusException = Status.NOT_FOUND
-                    .withDescription("Error al actualizar evento: "+ e.getMessage())
+                    .withDescription("Error al actualizar evento: " + e.getMessage())
                     .asRuntimeException();
             responseObserver.onError(statusException);
         }
@@ -134,6 +156,12 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     @Override
     public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request, StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "COORDINADOR"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             Evento evento = eventoRepository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
@@ -154,24 +182,30 @@ public class EventoServiceImpl extends EventoSolidarioServiceGrpc.EventoSolidari
     }
 
     // LISTAR EVENTOS
-   @Override
+    @Override
     public void listEventoSolidarios(UsuarioOuterClass.Empty request, StreamObserver<EventoSolidarioOuterClass.EventoSolidarioListResponse> responseObserver) {
-    try {
-        List<Evento> eventos = eventoRepository.findAll();
+        try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "COORDINADOR", "VOLUNTARIO"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
 
-        EventoSolidarioOuterClass.EventoSolidarioListResponse.Builder response =
-                EventoSolidarioOuterClass.EventoSolidarioListResponse.newBuilder();
+            List<Evento> eventos = eventoRepository.findAll();
 
-        eventos.forEach(evento -> response.addEventos(eventoMapper.fromEntity(evento)));
+            EventoSolidarioOuterClass.EventoSolidarioListResponse.Builder response =
+                    EventoSolidarioOuterClass.EventoSolidarioListResponse.newBuilder();
 
-        responseObserver.onNext(response.build());
-        responseObserver.onCompleted();
-    } catch (Exception e) {
-        StatusRuntimeException statusException = Status.NOT_FOUND
-                .withDescription("Error al listar eventos: " + e.getMessage())
-                .asRuntimeException();
-        responseObserver.onError(statusException);
+            eventos.forEach(evento -> response.addEventos(eventoMapper.fromEntity(evento)));
+
+            responseObserver.onNext(response.build());
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            StatusRuntimeException statusException = Status.NOT_FOUND
+                    .withDescription("Error al listar eventos: " + e.getMessage())
+                    .asRuntimeException();
+            responseObserver.onError(statusException);
+        }
     }
-}
 
 }
