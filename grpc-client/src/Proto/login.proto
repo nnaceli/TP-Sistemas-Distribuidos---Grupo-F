@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "usuario.proto";
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  bool success = 1;
+  Username username = 2;
+  Rol rol = 3;
+  string token = 4;
+}
+
+service LoginService{
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
