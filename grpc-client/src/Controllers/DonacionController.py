@@ -30,7 +30,7 @@ def crear():
             "message": response.message
         })
     except RpcError as e:
-        mensaje = e.details() if e.details() else "Error al crear la donación"
+        mensaje = e.details() if e.details() else "Error al crear la donación, verifique los datos ingresados"
         return jsonify({"error": mensaje}), 404
 
 @donacion_bp.route('/<int:donacion_id>', methods=['PUT'])
