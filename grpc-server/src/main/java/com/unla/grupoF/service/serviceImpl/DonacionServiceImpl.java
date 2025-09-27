@@ -6,6 +6,9 @@ import com.unla.grupoF.repositories.IDonacionRepository;
 import com.unla.grupoF.service.DonacionOuterClass;
 import com.unla.grupoF.service.DonacionServiceGrpc;
 import com.google.protobuf.Empty;
+import com.unla.grupoF.utils.LoginInterceptor;
+import com.unla.grupoF.utils.SecurityUtil;
+import io.grpc.Context;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -13,6 +16,7 @@ import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @GRpcService
 public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImplBase {
@@ -20,12 +24,21 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     @Autowired
     private IDonacionRepository repository;
 
+    @Autowired
+    private SecurityUtil securityUtil;
+
     private final DonacionMapper donacionMapper = new DonacionMapper();
 
     // alta
     @Override
     public void createDonacion(DonacionOuterClass.DonacionDTO request, StreamObserver<DonacionOuterClass.DonacionDTO> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "VOCAL"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             if (request.getCantidad() < 0) {
                 throw new RuntimeException("La cantidad no puede ser negativa");
             }
@@ -57,6 +70,12 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     @Override
     public void updateDonacion(DonacionOuterClass.DonacionDTO request, StreamObserver<DonacionOuterClass.DonacionDTO> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "VOCAL"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             Donacion donacion = repository.findByDescripcion(request.getDescripcion())
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
 
@@ -85,8 +104,13 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     //borrando buscando por id, en caso de que sea por descripcion hay que modificar el proto
     @Override
     public void deleteDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<Empty> responseObserver) {
-
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "VOCAL"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             Donacion donacion = repository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
 
@@ -110,6 +134,12 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     public void listDonaciones(Empty request,
                                StreamObserver<DonacionOuterClass.DonacionListResponse> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "VOCAL"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             DonacionOuterClass.DonacionListResponse.Builder lista = DonacionOuterClass.DonacionListResponse.newBuilder();
             repository.findAll().stream()
                     .filter(d -> !d.isEliminado())
@@ -130,6 +160,12 @@ public class DonacionServiceImpl extends DonacionServiceGrpc.DonacionServiceImpl
     @Override
     public void getDonacion(DonacionOuterClass.DonacionIdRequest request, StreamObserver<DonacionOuterClass.Donacion> responseObserver) {
         try {
+            if (!securityUtil.hasRole(
+                    LoginInterceptor.ROLE_CONTENT_KEY.get(),
+                    Set.of("PRESIDENTE", "VOCAL"))) {
+                throw new RuntimeException("No tiene permisos para realizar esta acción");
+            }
+
             Donacion donacion = repository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Donación no encontrada"));
             responseObserver.onNext( donacionMapper.fromEntity(donacion) );
