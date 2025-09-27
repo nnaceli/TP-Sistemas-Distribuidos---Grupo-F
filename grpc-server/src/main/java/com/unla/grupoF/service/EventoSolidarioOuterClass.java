@@ -4080,10 +4080,10 @@ public final class EventoSolidarioOuterClass {
       "\315\002\n\026EventoSolidarioService\022>\n\025CreateEven" +
       "toSolidario\022\023.EventoSolidarioDTO\032\020.Event" +
       "oSolidario\0228\n\022GetEventoSolidario\022\020.Event" +
-      "oSolidario\032\020.EventoSolidario\022>\n\025UpdateEv" +
+      "oIdRequest\032\020.EventoSolidario\022>\n\025UpdateEv" +
       "entoSolidario\022\023.EventoSolidarioDTO\032\020.Eve" +
       "ntoSolidario\022;\n\025DeleteEventoSolidario\022\020." +
-      "EventoSolidario\032\020.EventoSolidario\022<\n\024Lis" +
+      "EventoIdRequest\032\020.EventoSolidario\022<\n\024Lis" +
       "tEventoSolidarios\022\006.Empty\032\034.EventoSolida" +
       "rioListResponseb\006proto3"
     };

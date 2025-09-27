@@ -44,27 +44,27 @@ public final class EventoSolidarioServiceGrpc {
     return getCreateEventoSolidarioMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario,
+  private static volatile io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest,
       EventoSolidarioOuterClass.EventoSolidario> getGetEventoSolidarioMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "GetEventoSolidario",
-      requestType = EventoSolidarioOuterClass.EventoSolidario.class,
+      requestType = EventoSolidarioOuterClass.EventoIdRequest.class,
       responseType = EventoSolidarioOuterClass.EventoSolidario.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario,
+  public static io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest,
       EventoSolidarioOuterClass.EventoSolidario> getGetEventoSolidarioMethod() {
-    io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario, EventoSolidarioOuterClass.EventoSolidario> getGetEventoSolidarioMethod;
+    io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest, EventoSolidarioOuterClass.EventoSolidario> getGetEventoSolidarioMethod;
     if ((getGetEventoSolidarioMethod = EventoSolidarioServiceGrpc.getGetEventoSolidarioMethod) == null) {
       synchronized (EventoSolidarioServiceGrpc.class) {
         if ((getGetEventoSolidarioMethod = EventoSolidarioServiceGrpc.getGetEventoSolidarioMethod) == null) {
           EventoSolidarioServiceGrpc.getGetEventoSolidarioMethod = getGetEventoSolidarioMethod =
-              io.grpc.MethodDescriptor.<EventoSolidarioOuterClass.EventoSolidario, EventoSolidarioOuterClass.EventoSolidario>newBuilder()
+              io.grpc.MethodDescriptor.<EventoSolidarioOuterClass.EventoIdRequest, EventoSolidarioOuterClass.EventoSolidario>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetEventoSolidario"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  EventoSolidarioOuterClass.EventoSolidario.getDefaultInstance()))
+                  EventoSolidarioOuterClass.EventoIdRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   EventoSolidarioOuterClass.EventoSolidario.getDefaultInstance()))
               .setSchemaDescriptor(new EventoSolidarioServiceMethodDescriptorSupplier("GetEventoSolidario"))
@@ -106,27 +106,27 @@ public final class EventoSolidarioServiceGrpc {
     return getUpdateEventoSolidarioMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario,
+  private static volatile io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest,
       EventoSolidarioOuterClass.EventoSolidario> getDeleteEventoSolidarioMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "DeleteEventoSolidario",
-      requestType = EventoSolidarioOuterClass.EventoSolidario.class,
+      requestType = EventoSolidarioOuterClass.EventoIdRequest.class,
       responseType = EventoSolidarioOuterClass.EventoSolidario.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario,
+  public static io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest,
       EventoSolidarioOuterClass.EventoSolidario> getDeleteEventoSolidarioMethod() {
-    io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoSolidario, EventoSolidarioOuterClass.EventoSolidario> getDeleteEventoSolidarioMethod;
+    io.grpc.MethodDescriptor<EventoSolidarioOuterClass.EventoIdRequest, EventoSolidarioOuterClass.EventoSolidario> getDeleteEventoSolidarioMethod;
     if ((getDeleteEventoSolidarioMethod = EventoSolidarioServiceGrpc.getDeleteEventoSolidarioMethod) == null) {
       synchronized (EventoSolidarioServiceGrpc.class) {
         if ((getDeleteEventoSolidarioMethod = EventoSolidarioServiceGrpc.getDeleteEventoSolidarioMethod) == null) {
           EventoSolidarioServiceGrpc.getDeleteEventoSolidarioMethod = getDeleteEventoSolidarioMethod =
-              io.grpc.MethodDescriptor.<EventoSolidarioOuterClass.EventoSolidario, EventoSolidarioOuterClass.EventoSolidario>newBuilder()
+              io.grpc.MethodDescriptor.<EventoSolidarioOuterClass.EventoIdRequest, EventoSolidarioOuterClass.EventoSolidario>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "DeleteEventoSolidario"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  EventoSolidarioOuterClass.EventoSolidario.getDefaultInstance()))
+                  EventoSolidarioOuterClass.EventoIdRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   EventoSolidarioOuterClass.EventoSolidario.getDefaultInstance()))
               .setSchemaDescriptor(new EventoSolidarioServiceMethodDescriptorSupplier("DeleteEventoSolidario"))
@@ -225,7 +225,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public void getEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
+    public void getEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request,
         io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetEventoSolidarioMethod(), responseObserver);
     }
@@ -239,7 +239,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
+    public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request,
         io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDeleteEventoSolidarioMethod(), responseObserver);
     }
@@ -264,7 +264,7 @@ public final class EventoSolidarioServiceGrpc {
             getGetEventoSolidarioMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<
-                EventoSolidarioOuterClass.EventoSolidario,
+                EventoSolidarioOuterClass.EventoIdRequest,
                 EventoSolidarioOuterClass.EventoSolidario>(
                   this, METHODID_GET_EVENTO_SOLIDARIO)))
           .addMethod(
@@ -278,7 +278,7 @@ public final class EventoSolidarioServiceGrpc {
             getDeleteEventoSolidarioMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<
-                EventoSolidarioOuterClass.EventoSolidario,
+                EventoSolidarioOuterClass.EventoIdRequest,
                 EventoSolidarioOuterClass.EventoSolidario>(
                   this, METHODID_DELETE_EVENTO_SOLIDARIO)))
           .addMethod(
@@ -316,7 +316,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public void getEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
+    public void getEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request,
         io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetEventoSolidarioMethod(), getCallOptions()), request, responseObserver);
@@ -332,7 +332,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request,
+    public void deleteEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request,
         io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getDeleteEventoSolidarioMethod(), getCallOptions()), request, responseObserver);
@@ -370,7 +370,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public EventoSolidarioOuterClass.EventoSolidario getEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request) {
+    public EventoSolidarioOuterClass.EventoSolidario getEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetEventoSolidarioMethod(), getCallOptions(), request);
     }
@@ -384,7 +384,7 @@ public final class EventoSolidarioServiceGrpc {
 
     /**
      */
-    public EventoSolidarioOuterClass.EventoSolidario deleteEventoSolidario(EventoSolidarioOuterClass.EventoSolidario request) {
+    public EventoSolidarioOuterClass.EventoSolidario deleteEventoSolidario(EventoSolidarioOuterClass.EventoIdRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getDeleteEventoSolidarioMethod(), getCallOptions(), request);
     }
@@ -422,7 +422,7 @@ public final class EventoSolidarioServiceGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<EventoSolidarioOuterClass.EventoSolidario> getEventoSolidario(
-        EventoSolidarioOuterClass.EventoSolidario request) {
+        EventoSolidarioOuterClass.EventoIdRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetEventoSolidarioMethod(), getCallOptions()), request);
     }
@@ -438,7 +438,7 @@ public final class EventoSolidarioServiceGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<EventoSolidarioOuterClass.EventoSolidario> deleteEventoSolidario(
-        EventoSolidarioOuterClass.EventoSolidario request) {
+        EventoSolidarioOuterClass.EventoIdRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getDeleteEventoSolidarioMethod(), getCallOptions()), request);
     }
@@ -480,7 +480,7 @@ public final class EventoSolidarioServiceGrpc {
               (io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario>) responseObserver);
           break;
         case METHODID_GET_EVENTO_SOLIDARIO:
-          serviceImpl.getEventoSolidario((EventoSolidarioOuterClass.EventoSolidario) request,
+          serviceImpl.getEventoSolidario((EventoSolidarioOuterClass.EventoIdRequest) request,
               (io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario>) responseObserver);
           break;
         case METHODID_UPDATE_EVENTO_SOLIDARIO:
@@ -488,7 +488,7 @@ public final class EventoSolidarioServiceGrpc {
               (io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario>) responseObserver);
           break;
         case METHODID_DELETE_EVENTO_SOLIDARIO:
-          serviceImpl.deleteEventoSolidario((EventoSolidarioOuterClass.EventoSolidario) request,
+          serviceImpl.deleteEventoSolidario((EventoSolidarioOuterClass.EventoIdRequest) request,
               (io.grpc.stub.StreamObserver<EventoSolidarioOuterClass.EventoSolidario>) responseObserver);
           break;
         case METHODID_LIST_EVENTO_SOLIDARIOS:

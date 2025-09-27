@@ -28,8 +28,8 @@ message EventoIdRequest {
 
 service EventoSolidarioService {
   rpc CreateEventoSolidario (EventoSolidarioDTO) returns (EventoSolidario);
-  rpc GetEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc GetEventoSolidario (EventoIdRequest) returns (EventoSolidario);
   rpc UpdateEventoSolidario (EventoSolidarioDTO) returns (EventoSolidario);
-  rpc DeleteEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc DeleteEventoSolidario (EventoIdRequest) returns (EventoSolidario);
   rpc ListEventoSolidarios (Empty) returns (EventoSolidarioListResponse);
 }
