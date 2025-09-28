@@ -1,20 +1,15 @@
-import sys
-import os
 from flask import Blueprint, request, jsonify
 from grpc import RpcError
 from datetime import datetime
 
-#SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-#sys.path.append(SRC_DIR)
-
-from ..GrpcService.GrpcEventoSolidarioService import (
+from GrpcService.GrpcEventoSolidarioService import (
     crear_evento,
     obtener_evento,
     actualizar_evento,
     eliminar_evento,
     listar_eventos
 )
-from ..Proto.Usuario import usuario_pb2 as u_pb2
+from Proto.usuario import usuario_pb2 as u_pb2
 
 evento_bp = Blueprint('evento_bp', __name__)
 

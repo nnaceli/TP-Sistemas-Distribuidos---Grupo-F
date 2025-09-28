@@ -3,7 +3,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 
 from Proto.EventoSolidario import eventoSolidario_pb2 as ev_pb2
 from Proto.EventoSolidario import eventoSolidario_pb2_grpc as ev_pb2_grpc
-from Proto.Usuario import usuario_pb2 as u_pb2
+from Proto.usuario import usuario_pb2 as u_pb2
 
 from grpc import RpcError
 

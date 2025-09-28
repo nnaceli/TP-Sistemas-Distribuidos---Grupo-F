@@ -1,10 +1,5 @@
-import sys
-import os
 from flask import Blueprint, request, jsonify
 from grpc import RpcError
-
-#SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-#sys.path.append(SRC_DIR)
 
 from GrpcService.GrpcDonacionService import (
     crear_donacion,
