@@ -7,7 +7,8 @@ def get_donacion_stub():
     channel = grpc.insecure_channel('localhost:50051')
     return pb2_grpc.DonacionServiceStub(channel)
 
-def crear_donacion(categoria, descripcion, cantidad, usuario):
+def crear_donacion(categoria, descripcion, cantidad, usuario, token):
+    metadata = [('authorization', f'Bearer {token}')]
     stub = get_donacion_stub()
     donacion_nueva = pb2.Donacion(
         categoria=categoria,
@@ -15,10 +16,11 @@ def crear_donacion(categoria, descripcion, cantidad, usuario):
         cantidad=cantidad,
         usuario=usuario
     )
-    response = stub.CreateDonacion(donacion_nueva)
+    response = stub.CreateDonacion(donacion_nueva, metadata=metadata)
     return response
 
-def actualizar_donacion(id, categoria, descripcion, cantidad, usuario):
+def actualizar_donacion(id, categoria, descripcion, cantidad, usuario, token):
+    metadata = [('authorization', f'Bearer {token}')]
     stub = get_donacion_stub()
     donacion_actualizada = pb2.Donacion(
         id=id,
@@ -27,7 +29,7 @@ def actualizar_donacion(id, categoria, descripcion, cantidad, usuario):
         cantidad=cantidad,
         usuario=usuario
     )
-    response = stub.UpdateDonacion(donacion_actualizada)
+    response = stub.UpdateDonacion(donacion_actualizada, metadata=metadata)
     return response
 
 def eliminar_donacion(id):
