@@ -3,7 +3,8 @@ from google.protobuf.timestamp_pb2 import Timestamp
 
 from Proto.EventoSolidario import eventoSolidario_pb2 as ev_pb2
 from Proto.EventoSolidario import eventoSolidario_pb2_grpc as ev_pb2_grpc
-from Proto.usuario import usuario_pb2 as u_pb2
+from Proto.Usuario import usuario_pb2 as u_pb2
+from Proto.Usuario.usuario_pb2 import Empty
 
 from grpc import RpcError
 
@@ -63,10 +64,11 @@ def eliminar_evento(id):
     except RpcError as e:
         raise e
 
+
 def listar_eventos():
     try:
         stub = get_evento_stub()
-        response = stub.ListEventoSolidarios(u_pb2.Empty())
+        response = stub.ListEventoSolidarios(Empty())
         return response.eventos
     except RpcError as e:
         raise e

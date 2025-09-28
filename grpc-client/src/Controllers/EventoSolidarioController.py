@@ -1,3 +1,5 @@
+import os
+import sys
 from flask import Blueprint, request, jsonify
 from grpc import RpcError
 from datetime import datetime
@@ -9,7 +11,9 @@ from GrpcService.GrpcEventoSolidarioService import (
     eliminar_evento,
     listar_eventos
 )
-from Proto.usuario import usuario_pb2 as u_pb2
+PROTO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Proto', 'Usuario'))
+sys.path.append(PROTO_DIR)
+import usuario_pb2
 
 evento_bp = Blueprint('evento_bp', __name__)
 
@@ -22,7 +26,7 @@ def crear():
         fecha_evento = datetime.fromisoformat(fecha_str)
 
         # Mapear los miembros a un formato de protobuf
-        miembros_pb = [u_pb2.Usuario(username=username) for username in data['miembros']]
+        miembros_pb = [usuario_pb2.Usuario(username=username) for username in data['miembros']]
 
         response = crear_evento(
             nombre=data['nombre'],
@@ -63,7 +67,7 @@ def actualizar(evento_id):
         fecha_str = data['fecha']
         fecha_evento = datetime.fromisoformat(fecha_str)
 
-        miembros_proto = [u_pb2.Usuario(username=m['username']) for m in data['miembros']]
+        miembros_proto = [usuario_pb2.Usuario(username=m['username']) for m in data['miembros']]
 
         response = actualizar_evento(
             id=evento_id,
@@ -95,6 +99,7 @@ def eliminar(evento_id):
     except RpcError as e:
         mensaje = e.details() if e.details() else "Error al eliminar evento"
         return jsonify({"error": mensaje}), 404
+
 
 @evento_bp.route('/listar', methods=['GET'])
 def listar():
