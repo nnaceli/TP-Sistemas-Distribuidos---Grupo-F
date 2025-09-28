@@ -23,7 +23,7 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
-from Proto.Usuario import usuario_pb2 as Usuario_dot_usuario__pb2
+from Usuario import usuario_pb2 as Usuario_dot_usuario__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n%EventoSolidario/eventoSolidario.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x15Usuario/usuario.proto\"\x89\x01\n\x0f\x45ventoSolidario\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0e\n\x06nombre\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scripcion\x18\x03 \x01(\t\x12)\n\x05\x66\x65\x63ha\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1a\n\x08miembros\x18\x05 \x03(\x0b\x32\x08.Usuario\"\x80\x01\n\x12\x45ventoSolidarioDTO\x12\x0e\n\x06nombre\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scripcion\x18\x02 \x01(\t\x12)\n\x05\x66\x65\x63ha\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1a\n\x08miembros\x18\x04 \x03(\x0b\x32\x08.Usuario\"@\n\x1b\x45ventoSolidarioListResponse\x12!\n\x07\x65ventos\x18\x01 \x03(\x0b\x32\x10.EventoSolidario\"\x1d\n\x0f\x45ventoIdRequest\x12\n\n\x02id\x18\x01 \x01(\x03\x32\xcd\x02\n\x16\x45ventoSolidarioService\x12>\n\x15\x43reateEventoSolidario\x12\x13.EventoSolidarioDTO\x1a\x10.EventoSolidario\x12\x38\n\x12GetEventoSolidario\x12\x10.EventoSolidario\x1a\x10.EventoSolidario\x12>\n\x15UpdateEventoSolidario\x12\x13.EventoSolidarioDTO\x1a\x10.EventoSolidario\x12;\n\x15\x44\x65leteEventoSolidario\x12\x10.EventoSolidario\x1a\x10.EventoSolidario\x12<\n\x14ListEventoSolidarios\x12\x06.Empty\x1a\x1c.EventoSolidarioListResponseb\x06proto3')
