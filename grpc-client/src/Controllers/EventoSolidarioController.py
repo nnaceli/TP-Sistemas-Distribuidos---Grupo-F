@@ -4,17 +4,17 @@ from flask import Blueprint, request, jsonify
 from grpc import RpcError
 from datetime import datetime
 
-SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(SRC_DIR)
+#SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+#sys.path.append(SRC_DIR)
 
-from GrpcService.GrpcEventoSolidarioClient import (
+from ..GrpcService.GrpcEventoSolidarioService import (
     crear_evento,
     obtener_evento,
     actualizar_evento,
     eliminar_evento,
     listar_eventos
 )
-from usuario_pb2 import Usuario
+from ..Proto.Usuario import usuario_pb2 as u_pb2
 
 evento_bp = Blueprint('evento_bp', __name__)
 
@@ -27,13 +27,13 @@ def crear():
         fecha_evento = datetime.fromisoformat(fecha_str)
 
         # Mapear los miembros a un formato de protobuf
-        miembros_proto = [Usuario(username=m['username']) for m in data['miembros']]
+        miembros_pb = [u_pb2.Usuario(username=username) for username in data['miembros']]
 
         response = crear_evento(
             nombre=data['nombre'],
             descripcion=data['descripcion'],
             fecha=fecha_evento,
-            miembros=miembros_proto
+            miembros=miembros_pb
         )
         return jsonify({
             "id": response.id,
@@ -68,7 +68,7 @@ def actualizar(evento_id):
         fecha_str = data['fecha']
         fecha_evento = datetime.fromisoformat(fecha_str)
 
-        miembros_proto = [Usuario(username=m['username']) for m in data['miembros']]
+        miembros_proto = [u_pb2.Usuario(username=m['username']) for m in data['miembros']]
 
         response = actualizar_evento(
             id=evento_id,
