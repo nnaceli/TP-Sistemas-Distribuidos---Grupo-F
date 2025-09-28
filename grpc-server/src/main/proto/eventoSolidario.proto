@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "Usuario/usuario.proto";
+import "usuario.proto";
 
 message EventoSolidario {
   int64 id = 1; //no se debe mostrar en vista
