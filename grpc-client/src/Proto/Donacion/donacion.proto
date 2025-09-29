@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+enum DonacionCategoria {
+  ROPA = 0;
+  ALIMENTOS = 1;
+  JUGUETES = 2;
+  UTILES_ESCOLARES = 3;
+}
+
+message Donacion {
+  int64 id = 1;
+  DonacionCategoria categoria = 2;
+  string descripcion = 3;
+  int64 cantidad = 4;
+  bool eliminado = 5;
+  google.protobuf.Timestamp fechaCreacion = 6;
+  string usernameCreacion = 7;
+  google.protobuf.Timestamp fechaModificacion = 8;
+  string usernameModificacion = 9;
+}
+
+message DonacionDTO {
+  DonacionCategoria categoria = 2;
+  string descripcion = 3;
+  int64 cantidad = 4;
+}
+
+message DonacionIdRequest {
+  int64 id = 1;
+}
+
+message DonacionListResponse {
+  repeated Donacion donaciones = 1;
+}
+
+service DonacionService {
+  rpc CreateDonacion (DonacionDTO) returns (DonacionDTO);
+  rpc GetDonacion (DonacionIdRequest) returns (Donacion);
+  rpc UpdateDonacion (DonacionDTO) returns (DonacionDTO);
+  rpc DeleteDonacion (DonacionIdRequest) returns (google.protobuf.Empty);
+  rpc ListDonaciones (google.protobuf.Empty) returns (DonacionListResponse);
+}
