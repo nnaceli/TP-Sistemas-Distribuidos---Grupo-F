@@ -10,7 +10,7 @@ from grpc import RpcError
 
 # Función de utilidad para obtener el stub del servicio gRPC
 def get_evento_stub():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('localhost:9091')
     return ev_pb2_grpc.EventoSolidarioServiceStub(channel)
 
 def crear_evento(nombre, descripcion, fecha, miembros):
