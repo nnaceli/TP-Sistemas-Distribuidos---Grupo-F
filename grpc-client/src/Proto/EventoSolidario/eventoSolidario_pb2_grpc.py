@@ -3,8 +3,8 @@
 import grpc
 import warnings
 
-from EventoSolidario import eventoSolidario_pb2 as EventoSolidario_dot_eventoSolidario__pb2
-from Usuario import usuario_pb2 as Usuario_dot_usuario__pb2
+import eventoSolidario_pb2 as eventoSolidario__pb2
+import usuario_pb2 as usuario__pb2
 
 GRPC_GENERATED_VERSION = '1.75.1'
 GRPC_VERSION = grpc.__version__
@@ -19,7 +19,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in EventoSolidario/eventoSolidario_pb2_grpc.py depends on'
+        + f' but the generated code in eventoSolidario_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -36,30 +36,30 @@ class EventoSolidarioServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateEventoSolidario = channel.unary_unary(
-                '/EventoSolidarioService/CreateEventoSolidario',
-                request_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
-                response_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                _registered_method=True)
+            '/EventoSolidarioService/CreateEventoSolidario',
+            request_serializer=eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
+            response_deserializer=eventoSolidario__pb2.EventoSolidario.FromString,
+            _registered_method=True)
         self.GetEventoSolidario = channel.unary_unary(
-                '/EventoSolidarioService/GetEventoSolidario',
-                request_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-                response_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                _registered_method=True)
+            '/EventoSolidarioService/GetEventoSolidario',
+            request_serializer=eventoSolidario__pb2.EventoIdRequest.SerializeToString,
+            response_deserializer=eventoSolidario__pb2.EventoSolidario.FromString,
+            _registered_method=True)
         self.UpdateEventoSolidario = channel.unary_unary(
-                '/EventoSolidarioService/UpdateEventoSolidario',
-                request_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
-                response_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                _registered_method=True)
+            '/EventoSolidarioService/UpdateEventoSolidario',
+            request_serializer=eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
+            response_deserializer=eventoSolidario__pb2.EventoSolidario.FromString,
+            _registered_method=True)
         self.DeleteEventoSolidario = channel.unary_unary(
-                '/EventoSolidarioService/DeleteEventoSolidario',
-                request_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-                response_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                _registered_method=True)
+            '/EventoSolidarioService/DeleteEventoSolidario',
+            request_serializer=eventoSolidario__pb2.EventoIdRequest.SerializeToString,
+            response_deserializer=eventoSolidario__pb2.EventoSolidario.FromString,
+            _registered_method=True)
         self.ListEventoSolidarios = channel.unary_unary(
-                '/EventoSolidarioService/ListEventoSolidarios',
-                request_serializer=Usuario_dot_usuario__pb2.Empty.SerializeToString,
-                response_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioListResponse.FromString,
-                _registered_method=True)
+            '/EventoSolidarioService/ListEventoSolidarios',
+            request_serializer=usuario__pb2.Empty.SerializeToString,
+            response_deserializer=eventoSolidario__pb2.EventoSolidarioListResponse.FromString,
+            _registered_method=True)
 
 
 class EventoSolidarioServiceServicer(object):
@@ -98,59 +98,59 @@ class EventoSolidarioServiceServicer(object):
 
 def add_EventoSolidarioServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'CreateEventoSolidario': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateEventoSolidario,
-                    request_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.FromString,
-                    response_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            ),
-            'GetEventoSolidario': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetEventoSolidario,
-                    request_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                    response_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            ),
-            'UpdateEventoSolidario': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateEventoSolidario,
-                    request_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.FromString,
-                    response_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            ),
-            'DeleteEventoSolidario': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteEventoSolidario,
-                    request_deserializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
-                    response_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            ),
-            'ListEventoSolidarios': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListEventoSolidarios,
-                    request_deserializer=Usuario_dot_usuario__pb2.Empty.FromString,
-                    response_serializer=EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioListResponse.SerializeToString,
-            ),
+        'CreateEventoSolidario': grpc.unary_unary_rpc_method_handler(
+            servicer.CreateEventoSolidario,
+            request_deserializer=eventoSolidario__pb2.EventoSolidarioDTO.FromString,
+            response_serializer=eventoSolidario__pb2.EventoSolidario.SerializeToString,
+        ),
+        'GetEventoSolidario': grpc.unary_unary_rpc_method_handler(
+            servicer.GetEventoSolidario,
+            request_deserializer=eventoSolidario__pb2.EventoIdRequest.FromString,
+            response_serializer=eventoSolidario__pb2.EventoSolidario.SerializeToString,
+        ),
+        'UpdateEventoSolidario': grpc.unary_unary_rpc_method_handler(
+            servicer.UpdateEventoSolidario,
+            request_deserializer=eventoSolidario__pb2.EventoSolidarioDTO.FromString,
+            response_serializer=eventoSolidario__pb2.EventoSolidario.SerializeToString,
+        ),
+        'DeleteEventoSolidario': grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteEventoSolidario,
+            request_deserializer=eventoSolidario__pb2.EventoIdRequest.FromString,
+            response_serializer=eventoSolidario__pb2.EventoSolidario.SerializeToString,
+        ),
+        'ListEventoSolidarios': grpc.unary_unary_rpc_method_handler(
+            servicer.ListEventoSolidarios,
+            request_deserializer=usuario__pb2.Empty.FromString,
+            response_serializer=eventoSolidario__pb2.EventoSolidarioListResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'EventoSolidarioService', rpc_method_handlers)
+        'EventoSolidarioService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
     server.add_registered_method_handlers('EventoSolidarioService', rpc_method_handlers)
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class EventoSolidarioService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def CreateEventoSolidario(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
             '/EventoSolidarioService/CreateEventoSolidario',
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
+            eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
+            eventoSolidario__pb2.EventoSolidario.FromString,
             options,
             channel_credentials,
             insecure,
@@ -163,21 +163,21 @@ class EventoSolidarioService(object):
 
     @staticmethod
     def GetEventoSolidario(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                           target,
+                           options=(),
+                           channel_credentials=None,
+                           call_credentials=None,
+                           insecure=False,
+                           compression=None,
+                           wait_for_ready=None,
+                           timeout=None,
+                           metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
             '/EventoSolidarioService/GetEventoSolidario',
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
+            eventoSolidario__pb2.EventoIdRequest.SerializeToString,
+            eventoSolidario__pb2.EventoSolidario.FromString,
             options,
             channel_credentials,
             insecure,
@@ -190,21 +190,21 @@ class EventoSolidarioService(object):
 
     @staticmethod
     def UpdateEventoSolidario(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
             '/EventoSolidarioService/UpdateEventoSolidario',
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
+            eventoSolidario__pb2.EventoSolidarioDTO.SerializeToString,
+            eventoSolidario__pb2.EventoSolidario.FromString,
             options,
             channel_credentials,
             insecure,
@@ -217,21 +217,21 @@ class EventoSolidarioService(object):
 
     @staticmethod
     def DeleteEventoSolidario(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
             '/EventoSolidarioService/DeleteEventoSolidario',
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.SerializeToString,
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidario.FromString,
+            eventoSolidario__pb2.EventoIdRequest.SerializeToString,
+            eventoSolidario__pb2.EventoSolidario.FromString,
             options,
             channel_credentials,
             insecure,
@@ -244,21 +244,21 @@ class EventoSolidarioService(object):
 
     @staticmethod
     def ListEventoSolidarios(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
+                             target,
+                             options=(),
+                             channel_credentials=None,
+                             call_credentials=None,
+                             insecure=False,
+                             compression=None,
+                             wait_for_ready=None,
+                             timeout=None,
+                             metadata=None):
         return grpc.experimental.unary_unary(
             request,
             target,
             '/EventoSolidarioService/ListEventoSolidarios',
-            Usuario_dot_usuario__pb2.Empty.SerializeToString,
-            EventoSolidario_dot_eventoSolidario__pb2.EventoSolidarioListResponse.FromString,
+            usuario__pb2.Empty.SerializeToString,
+            eventoSolidario__pb2.EventoSolidarioListResponse.FromString,
             options,
             channel_credentials,
             insecure,
