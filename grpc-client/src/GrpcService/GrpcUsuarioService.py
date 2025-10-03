@@ -1,14 +1,13 @@
 import grpc
 import sys
 import os
-from google.protobuf.json_format import MessageToJson
 
 # Agregamos la ruta donde están los archivos generados
 PROTO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Proto', 'Usuario'))
 sys.path.append(PROTO_DIR)
 
-import usuario_pb2
-import usuario_pb2_grpc
+from Proto.Usuario import usuario_pb2
+from Proto.Usuario import usuario_pb2_grpc
 
 channel = grpc.insecure_channel('localhost:9091')
 stub = usuario_pb2_grpc.UsuarioServiceStub(channel)

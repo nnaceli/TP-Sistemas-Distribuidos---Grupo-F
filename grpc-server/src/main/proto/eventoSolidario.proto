@@ -1,8 +1,6 @@
 syntax = "proto3";
-
 import "google/protobuf/timestamp.proto";
 import "usuario.proto";
-
 message EventoSolidario {
   int64 id = 1; //no se debe mostrar en vista
   string nombre = 2;
@@ -10,26 +8,23 @@ message EventoSolidario {
   google.protobuf.Timestamp fecha = 4; // debe ser futura a la fecha de creacion
   repeated Usuario miembros = 5;
 }
-
 message EventoSolidarioDTO {
   string nombre = 1;
   string descripcion = 2;
   google.protobuf.Timestamp fecha = 3;
   repeated Usuario miembros = 4;
 }
-
 message EventoSolidarioListResponse {
   repeated EventoSolidario eventos = 1;
 }
-
 message EventoIdRequest {
   int64 id = 1;
 }
 
 service EventoSolidarioService {
   rpc CreateEventoSolidario (EventoSolidarioDTO) returns (EventoSolidario);
-  rpc GetEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc GetEventoSolidario (EventoIdRequest) returns (EventoSolidario);
   rpc UpdateEventoSolidario (EventoSolidarioDTO) returns (EventoSolidario);
-  rpc DeleteEventoSolidario (EventoSolidario) returns (EventoSolidario);
+  rpc DeleteEventoSolidario (EventoIdRequest) returns (EventoSolidario);
   rpc ListEventoSolidarios (Empty) returns (EventoSolidarioListResponse);
 }

@@ -11,6 +11,7 @@ Requisitos de instalación:
 + Python - 3.13.7
   * asegurarse de tener la variable de entorno PATH configurada
   * "pip install" grpcio, entre otras librerías necesarias
+  * posicionarse en el directorio grpc-client/src (IMPORTANTE PARA EVITAR ERRORES DE IMPORT)
   * "python app.py" para correr el servidor gRPC
 + Java - JDK 17
 + Maven - 3.9.6

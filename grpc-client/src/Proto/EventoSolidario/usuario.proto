@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+message Empty {}
+
+message Rol {
+  string nombre = 1;
+}
+
+message Usuario {
+  int64 id = 1;
+  string username = 2;
+  string nombre = 3;
+  string apellido = 4;
+  string telefono = 5;
+  string password = 6;
+  string email = 7;
+  Rol rol = 8;
+  bool activo = 9;
+}
+
+message UsuarioDTO {
+  string username = 2;
+  string nombre = 3;
+  string apellido = 4;
+  string telefono = 5;
+  string email = 6;
+  Rol rol = 7;
+}
+
+message UsuarioListResponse {
+  repeated Usuario usuarios = 1;
+}
+
+message Username {
+  string username = 1;
+}
+
+service UsuarioService {
+  rpc CreateUsuario (UsuarioDTO) returns (UsuarioDTO);
+  rpc GetUsuario (Username) returns (Usuario);
+  rpc UpdateUsuario (UsuarioDTO) returns (UsuarioDTO);
+  rpc DeleteUsuario (Username) returns (Empty);
+  rpc ListUsuarios (Empty) returns (UsuarioListResponse);
+}

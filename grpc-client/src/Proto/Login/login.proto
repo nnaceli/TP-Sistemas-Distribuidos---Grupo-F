@@ -1,7 +1,6 @@
 syntax = "proto3";
 
-import "Usuario/usuario.proto";
-
+import "usuario.proto";
 
 message LoginRequest {
   string username = 1;
