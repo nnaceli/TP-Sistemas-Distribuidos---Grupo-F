@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listarDonaciones } from '../../Service/DonacionService';
 import { DonacionCategoria } from '../../Models/DonacionCategoria';
-import '../../CSS/DonacionList.css'; // Asegúrate de crear este archivo CSS
+import '../../CSS/DonacionList.css';
 
 export const DonacionList = () => {
     const [donaciones, setDonaciones] = useState([]);

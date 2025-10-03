@@ -1,4 +1,5 @@
 import '../../CSS/App.css';
+import { DonacionList } from '../DonacionComponents/DonacionList'; // Añadir esta línea
 import { ListaUsuarios } from '../UsuarioComponents/UsuarioList';
 import { UsuarioForm } from '../UsuarioComponents/UsuarioForm';
 import { MasterLayout } from './Master';
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/usuarios/nuevo" element={<UsuarioForm />} />
                 <Route path="/usuarios/:username" element={<UsuarioDetalle />} />
                 <Route path="/usuarios/:username/editar" element={<UsuarioEditar />} />
+                <Route path="/donaciones" element={<DonacionList />} />
               </Routes>
             </MasterLayout>
           } />

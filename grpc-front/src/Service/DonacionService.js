@@ -1,7 +1,7 @@
 import Donacion from '../Models/Donacion'; 
 import { DonacionCategoria } from '../Models/DonacionCategoria';
 
-const BASE_URL = 'http://127.0.0.1:5000/api/client/donaciones';
+const BASE_URL = 'http://127.0.0.1:5000/api/client/donacion/listar';
 
 const getAuthHeaders = () => {
     const token = JSON.parse(localStorage.getItem('userSession'))?.token;
