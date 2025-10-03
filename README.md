@@ -24,6 +24,8 @@ Requisitos de instalación:
     * https://localhost:3000 para acceder a la aplicación web
 + PostgreSQL 17 - default port 
    * se debe crear una base de datos bajo el nombre "empuje_comunitario_db"
+* Docker
+  * Docker Desktop o bien desde la consola de comando: "docker compose up -d --build"
 
 
 Directorios:
@@ -36,3 +38,7 @@ Directorios:
     + service - clases autogeneradas por gRPC desde los archivos .prot
     + serviceImpl - clases que implementan las clases autogeneradas por gRPC
   + proto
+  
++ kafka
+    + kafka-consumer
+    + kafka-producer
