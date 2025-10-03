@@ -3,8 +3,8 @@
 import grpc
 import warnings
 
-import eventoSolidario_pb2 as eventoSolidario__pb2
-import usuario_pb2 as usuario__pb2
+from Proto.EventoSolidario import eventoSolidario_pb2 as eventoSolidario__pb2
+from Proto.EventoSolidario import usuario_pb2 as usuario__pb2
 
 GRPC_GENERATED_VERSION = '1.75.1'
 GRPC_VERSION = grpc.__version__
