@@ -77,9 +77,7 @@ export default class Donacion {
     }
 }
 
-/**
- * Clase que representa el Data Transfer Object para la creación/actualización (campos del DonacionDTO en el proto).
- */
+
 export class DonacionDTO {
     constructor(categoria, descripcion, cantidad) {
         this.categoria = categoria;
@@ -87,5 +85,4 @@ export class DonacionDTO {
         this.cantidad = cantidad;
     }
 
-    // No se implementa constructorVacio ni getters ya que este es un objeto de solo transferencia
 }
