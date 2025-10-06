@@ -25,6 +25,10 @@ def crear():
             return jsonify({"error": "Token no proporcionado"}), 401
 
         data = request.json
+    
+        if 'categoria' not in data or 'descripcion' not in data or 'cantidad' not in data:
+            return jsonify({"error": "Faltan datos requeridos (categoria, descripcion, cantidad)."}), 400
+        
         donacion = crear_donacion(
             categoria=data['categoria'],
             descripcion=data['descripcion'],
@@ -36,11 +40,21 @@ def crear():
             "descripcion": donacion.descripcion,
             "cantidad": donacion.cantidad
         })
+    
     except RpcError as e:
-        mensaje = e.details() if e.details() else "Error al crear la donación, verifique los datos ingresados"
-        return jsonify({"error": mensaje}), 404
+        # Manejo de errores de gRPC (ej. errores de validación)
+        mensaje = e.details() if e.details() else "Error al crear la donación. Verifique los datos."
+        print(f"ERROR GRPc en crear(): {mensaje}") # Imprime en consola para debug
+        return jsonify({"error": mensaje}), 400 # 400 Bad Request es más apropiado aquí
+        
+    except Exception as e:
+        import traceback
+        print("--------------------------------------------------")
+        print("ERROR FATAL EN CREAR DONACION (PYTHON TRACEBACK):")
+        traceback.print_exc() # Imprime el error completo en la consola de Python
+        print("--------------------------------------------------")
+        return jsonify({"error": f"Error interno del servidor. Consulte la consola de Python."}), 500
 
-@donacion_bp.route('/actualizar', methods=['PUT'])
 def actualizar():
     try:
         token = extraer_token()

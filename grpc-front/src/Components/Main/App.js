@@ -28,6 +28,7 @@ function App() {
                 <Route path="/usuarios/:username/editar" element={<UsuarioEditar />} />
                 <Route path="/donaciones" element={<DonacionList />} />
                 <Route path="/donaciones/nueva" element={<DonacionForm/>} />
+                <Route path="/donaciones/editar/:id" element={<DonacionForm/>} />
               </Routes>
             </MasterLayout>
           } />

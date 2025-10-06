@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarDonaciones } from '../../Service/DonacionService';
+import { listarDonaciones, eliminarDonacion } from '../../Service/DonacionService';
 import { DonacionCategoria } from '../../Models/DonacionCategoria';
 import '../../CSS/DonacionList.css';
 
@@ -31,6 +31,21 @@ export const DonacionList = () => {
         return categoria || 'Desconocida';
     };
 
+    const handleEliminar = async (id, descripcion) => {
+        if (window.confirm(`¿Está seguro de dar de baja la donación: "${descripcion}"?`)) {
+            try {
+                await eliminarDonacion(id); 
+                
+                alert(`Donación ${id} dada de baja exitosamente.`);
+                
+                setDonaciones(prev => prev.filter(d => d.id !== id)); 
+            } catch (err) {
+                console.error("Error al eliminar la donación:", err);
+                setError(`Error al dar de baja: ${err.message}`);
+            }
+        }
+    };
+
     if (loading) return <p className="loading">Cargando inventario de donaciones...</p>;
     if (error) return <p className="error">Error: {error}</p>;
 
@@ -51,7 +66,8 @@ export const DonacionList = () => {
                         <th>Descripción</th>
                         <th>Cantidad</th>
                         <th>Alta</th>
-                        <th>Acciones</th>
+                        <th>Eliminar</th>
+                        <th>Modificar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,8 +78,13 @@ export const DonacionList = () => {
                             <td>{donacion.cantidad}</td>
                             <td>{new Date(donacion.fechaAlta).toLocaleDateString()}</td>
                             <td>
-                                <button onClick={() => navigate(`/donaciones/${donacion.id}`)}>
-                                    Ver / Modificar
+                                <button onClick={() => handleEliminar(donacion.id, donacion.descripcion)}>
+                                    Dar de baja
+                                </button>
+                            </td>
+                            <td>
+                                <button onClick={() => navigate(`/donaciones/editar/${donacion.id}`)}>
+                                    Modificar
                                 </button>
                             </td>
                         </tr>
