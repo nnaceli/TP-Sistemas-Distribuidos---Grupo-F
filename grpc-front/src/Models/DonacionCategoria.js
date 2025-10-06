@@ -1,6 +1,6 @@
 export const DonacionCategoria = {
-    ROPA: 0,
-    ALIMENTOS: 1,
-    JUGUETES: 2,
-    UTILES_ESCOLARES: 3
+    ROPA: 'ROPA',
+    ALIMENTOS: 'ALIMENTOS',
+    JUGUETES: 'JUGUETES',
+    UTILES_ESCOLARES: 'UTILES_ESCOLARES'
 };

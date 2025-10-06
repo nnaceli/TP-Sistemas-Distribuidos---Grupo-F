@@ -88,7 +88,7 @@ export const DonacionForm = () => {
                         disabled={isEdit} // No se debe modificar la categoría en la edición
                     >
                         {categorias.map(cat => (
-                            <option key={cat} value={DonacionCategoria[cat]}>
+                            <option key={cat} value={cat}>
                                 {cat}
                             </option>
                         ))}
