@@ -26,10 +26,11 @@ def crear_donacion(categoria, descripcion, cantidad, token):
     return response
 
 
-def actualizar_donacion(categoria, descripcion, cantidad, token):
+def actualizar_donacion(donacion_id, categoria, descripcion, cantidad, token):
     metadata = [('authorization', f'Bearer {token}')]
     stub = get_donacion_stub()
     donacion_actualizada = pb2.Donacion(
+        id=donacion_id,
         categoria=categoria,
         descripcion=descripcion,
         cantidad=cantidad

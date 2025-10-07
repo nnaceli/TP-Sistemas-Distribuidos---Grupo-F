@@ -26,9 +26,7 @@ export const DonacionList = () => {
     }, []);
 
     const getNombreCategoria = (valor) => {
-        // Busca el nombre de la categoría por su valor numérico
-        const categoria = Object.keys(DonacionCategoria).find(key => DonacionCategoria[key] === valor);
-        return categoria || 'Desconocida';
+        return DonacionCategoria[valor] || 'Desconocida';
     };
 
     const handleEliminar = async (id, descripcion) => {
@@ -65,7 +63,6 @@ export const DonacionList = () => {
                         <th>Categoría</th>
                         <th>Descripción</th>
                         <th>Cantidad</th>
-                        <th>Alta</th>
                         <th>Eliminar</th>
                         <th>Modificar</th>
                     </tr>
@@ -76,7 +73,6 @@ export const DonacionList = () => {
                             <td>{getNombreCategoria(donacion.categoria)}</td>
                             <td>{donacion.descripcion.substring(0, 50)}...</td>
                             <td>{donacion.cantidad}</td>
-                            <td>{new Date(donacion.fechaAlta).toLocaleDateString()}</td>
                             <td>
                                 <button onClick={() => handleEliminar(donacion.id, donacion.descripcion)}>
                                     Dar de baja

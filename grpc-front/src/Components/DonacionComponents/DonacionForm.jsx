@@ -81,15 +81,22 @@ export const DonacionForm = () => {
             <form onSubmit={handleSubmit}>
                 <label>
                     Categoría:
-                    <select 
+                     <select 
                         name="categoria" 
                         value={formData.categoria} 
                         onChange={handleChange}
-                        disabled={isEdit} // No se debe modificar la categoría en la edición
+                        disabled={isEdit}
                     >
-                        {categorias.map(cat => (
-                            <option key={cat} value={cat}>
-                                {cat}
+                        {/* Usamos Object.entries para obtener [key, value] */}
+                        {Object.entries(DonacionCategoria).map(([key, value]) => (
+                            <option 
+                                key={key} 
+                                // CLAVE: El value que se envía/guarda en el estado debe ser el número (key)
+                                // Usamos Number(key) para asegurar que es un número.
+                                value={Number(key)} 
+                            >
+                                {/* Lo que se muestra al usuario es el valor (string) */}
+                                {value} 
                             </option>
                         ))}
                     </select>

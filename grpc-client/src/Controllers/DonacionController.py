@@ -42,40 +42,42 @@ def crear():
         })
     
     except RpcError as e:
-        # Manejo de errores de gRPC (ej. errores de validación)
         mensaje = e.details() if e.details() else "Error al crear la donación. Verifique los datos."
-        print(f"ERROR GRPc en crear(): {mensaje}") # Imprime en consola para debug
         return jsonify({"error": mensaje}), 400 # 400 Bad Request es más apropiado aquí
         
     except Exception as e:
-        import traceback
-        print("--------------------------------------------------")
-        print("ERROR FATAL EN CREAR DONACION (PYTHON TRACEBACK):")
-        traceback.print_exc() # Imprime el error completo en la consola de Python
-        print("--------------------------------------------------")
         return jsonify({"error": f"Error interno del servidor. Consulte la consola de Python."}), 500
 
-def actualizar():
+@donacion_bp.route('/<int:donacion_id>', methods=['PUT'])
+def actualizar_donacion_route(donacion_id):
     try:
         token = extraer_token()
         if not token:
             return jsonify({"error": "Token no proporcionado"}), 401
-
+        
         data = request.json
+        if not data:
+            return jsonify({"error": "Datos de actualización no proporcionados"}), 400
+
         donacion_actualizada = actualizar_donacion(
+            donacion_id=donacion_id, 
             categoria=data['categoria'],
             descripcion=data['descripcion'],
             cantidad=data['cantidad'],
             token=token
         )
+        
+        # 3. Respuesta exitosa
         return jsonify({
-            "categoria": donacion_actualizada.categoria,
-            "descripcion": donacion_actualizada.descripcion,
-            "cantidad": donacion_actualizada.cantidad
-        })
+            "mensaje": f"Donación {donacion_id} actualizada correctamente."
+        }), 200
+    
     except RpcError as e:
         mensaje = e.details() if e.details() else "Error al actualizar la donación"
         return jsonify({"error": mensaje}), 404
+    except Exception as e:
+         print(f"ERROR FATAL EN ACTUALIZAR DONACION: {e}")
+         return jsonify({"error": f"Error interno del servidor: {str(e)}"}), 500
 
 @donacion_bp.route('/<int:donacion_id>', methods=['DELETE'])
 def eliminar(donacion_id):
