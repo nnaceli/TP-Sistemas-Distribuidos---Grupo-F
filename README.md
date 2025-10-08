@@ -11,6 +11,7 @@ Requisitos de instalación:
 + Python - 3.13.7
   * asegurarse de tener la variable de entorno PATH configurada
   * "pip install" grpcio, entre otras librerías necesarias
+  * posicionarse en el directorio grpc-client/src (IMPORTANTE PARA EVITAR ERRORES DE IMPORT)
   * "python app.py" para correr el servidor gRPC
 + Java - JDK 17
 + Maven - 3.9.6
@@ -23,6 +24,8 @@ Requisitos de instalación:
     * https://localhost:3000 para acceder a la aplicación web
 + PostgreSQL 17 - default port 
    * se debe crear una base de datos bajo el nombre "empuje_comunitario_db"
+* Docker
+  * Docker Desktop o bien desde la consola de comando: "docker compose up -d --build"
 
 
 Directorios:
@@ -35,3 +38,7 @@ Directorios:
     + service - clases autogeneradas por gRPC desde los archivos .prot
     + serviceImpl - clases que implementan las clases autogeneradas por gRPC
   + proto
+  
++ kafka
+    + kafka-consumer
+    + kafka-producer
