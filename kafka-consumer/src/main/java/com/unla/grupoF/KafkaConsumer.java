@@ -3,7 +3,9 @@ package com.unla.grupoF;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unla.grupoF.dto.SolicitudDonacionDTO;
 import com.unla.grupoF.dto.BajaSolicitudDonacionDTO;
+import com.unla.grupoF.dto.TransferenciaDonacionDTO;
 import com.unla.grupoF.service.SolicitudDonacionService;
+import com.unla.grupoF.util.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,7 +25,7 @@ public class KafkaConsumer {
     @KafkaListener(topics = {
             "solicitud-donaciones",
             "baja-solicitud-donaciones",
-            "transferencia-donaciones",
+            "transferencia-donaciones${organization.id}", //nuestra org
             "eventos-solidarios",
             "baja-evento-solidario",
             "adhesion-evento"
@@ -63,9 +65,14 @@ public class KafkaConsumer {
                 }
 
                 // 🔹 TRANSFERENCIAS
-                case "transferencia-donaciones" -> {
+                case "transferencia-donaciones101" -> {
                     log.info("Procesando transferencia de donaciones...");
-                    // TODO: Implementar luego
+                    TransferenciaDonacionDTO transfDTO =
+                            objectMapper.readValue(message, TransferenciaDonacionDTO.class);
+
+                    if(transfDTO.getOrganizacionId().longValue() != Constants.ORG_ID.longValue()){
+                        solicitudService.recibirDonacionTransferida(transfDTO);
+                    }
                 }
 
                 // 🔹 EVENTOS SOLIDARIOS
