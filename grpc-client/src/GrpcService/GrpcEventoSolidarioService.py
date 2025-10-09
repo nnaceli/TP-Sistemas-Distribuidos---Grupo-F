@@ -67,11 +67,13 @@ def eliminar_evento(id, token):
     except RpcError as e:
         raise e
 
+
 def listar_eventos(token):
     try:
         metadata = [('authorization', f'Bearer {token}')]
         stub = get_evento_stub()
         response = stub.ListEventoSolidarios(empty_pb2.Empty(), metadata=metadata)
+
         return response.eventos
     except RpcError as e:
         raise e

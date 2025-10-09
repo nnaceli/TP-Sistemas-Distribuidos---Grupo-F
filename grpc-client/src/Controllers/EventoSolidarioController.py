@@ -1,3 +1,5 @@
+import os
+import sys
 from flask import Blueprint, request, jsonify
 from grpc import RpcError
 from datetime import datetime, timezone
@@ -9,6 +11,7 @@ from GrpcService.GrpcEventoSolidarioService import (
     eliminar_evento,
     listar_eventos
 )
+
 
 from GrpcService.GrpcUsuarioService import (
     obtener_usuario
@@ -34,6 +37,7 @@ def crear():
         fecha_str = data['fecha']
         # Convertir la fecha de string a un objeto datetime de Python
         fecha_evento = datetime.fromisoformat(fecha_str).astimezone(timezone.utc)
+
 
         # Buscar y agregar miembros
         miembros_pb = []
@@ -92,6 +96,7 @@ def actualizar(evento_id):
         data = request.json
         fecha_str = data['fecha']
         fecha_evento = datetime.fromisoformat(fecha_str)
+
 
         # Buscar y agregar miembros
         miembros_pb = [obtener_usuario(username, token) for username in data['miembros']]
@@ -175,6 +180,7 @@ def eliminar(evento_id):
     except RpcError as e:
         mensaje = e.details() if e.details() else "Error al eliminar evento"
         return jsonify({"error": mensaje}), 404
+
 
 @evento_bp.route('/listar', methods=['GET'])
 def listar():

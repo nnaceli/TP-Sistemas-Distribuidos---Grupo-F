@@ -1,7 +1,7 @@
 import Donacion from '../Models/Donacion'; 
 import { DonacionCategoria } from '../Models/DonacionCategoria';
 
-const BASE_URL = 'http://127.0.0.1:5000/api/client/donaciones';
+const BASE_URL = 'http://127.0.0.1:5000/api/client/donacion';
 
 const getAuthHeaders = () => {
     const token = JSON.parse(localStorage.getItem('userSession'))?.token;
@@ -39,6 +39,12 @@ export const listarDonaciones = async () => {
 // Función para crear una nueva Donación
 export const crearDonacion = async (donacionData) => {
     try {
+        // testeo
+        const headers = getAuthHeaders();
+        console.log("Headers que se envían:", headers);
+        const url = `${BASE_URL}/crear`;
+        console.log("URL de destino:", url);
+
         const response = await fetch(`${BASE_URL}/crear`, {
             method: 'POST',
             headers: getAuthHeaders(),

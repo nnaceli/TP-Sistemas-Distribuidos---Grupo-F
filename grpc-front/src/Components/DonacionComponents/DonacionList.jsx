@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarDonaciones } from '../../Service/DonacionService';
+import { listarDonaciones, eliminarDonacion } from '../../Service/DonacionService';
 import { DonacionCategoria } from '../../Models/DonacionCategoria';
-import '../../CSS/DonacionList.css'; // Asegúrate de crear este archivo CSS
+import '../../CSS/DonacionList.css';
 
 export const DonacionList = () => {
     const [donaciones, setDonaciones] = useState([]);
@@ -26,9 +26,22 @@ export const DonacionList = () => {
     }, []);
 
     const getNombreCategoria = (valor) => {
-        // Busca el nombre de la categoría por su valor numérico
-        const categoria = Object.keys(DonacionCategoria).find(key => DonacionCategoria[key] === valor);
-        return categoria || 'Desconocida';
+        return DonacionCategoria[valor] || 'Desconocida';
+    };
+
+    const handleEliminar = async (id, descripcion) => {
+        if (window.confirm(`¿Está seguro de dar de baja la donación: "${descripcion}"?`)) {
+            try {
+                await eliminarDonacion(id); 
+                
+                alert(`Donación ${id} dada de baja exitosamente.`);
+                
+                setDonaciones(prev => prev.filter(d => d.id !== id)); 
+            } catch (err) {
+                console.error("Error al eliminar la donación:", err);
+                setError(`Error al dar de baja: ${err.message}`);
+            }
+        }
     };
 
     if (loading) return <p className="loading">Cargando inventario de donaciones...</p>;
@@ -50,8 +63,8 @@ export const DonacionList = () => {
                         <th>Categoría</th>
                         <th>Descripción</th>
                         <th>Cantidad</th>
-                        <th>Alta</th>
-                        <th>Acciones</th>
+                        <th>Eliminar</th>
+                        <th>Modificar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,10 +73,14 @@ export const DonacionList = () => {
                             <td>{getNombreCategoria(donacion.categoria)}</td>
                             <td>{donacion.descripcion.substring(0, 50)}...</td>
                             <td>{donacion.cantidad}</td>
-                            <td>{new Date(donacion.fechaAlta).toLocaleDateString()}</td>
                             <td>
-                                <button onClick={() => navigate(`/donaciones/${donacion.id}`)}>
-                                    Ver / Modificar
+                                <button onClick={() => handleEliminar(donacion.id, donacion.descripcion)}>
+                                    Dar de baja
+                                </button>
+                            </td>
+                            <td>
+                                <button onClick={() => navigate(`/donaciones/editar/${donacion.id}`)}>
+                                    Modificar
                                 </button>
                             </td>
                         </tr>
