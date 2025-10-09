@@ -26,20 +26,20 @@ public class EventoExternoService {
                 .build();
 
         eventoRepository.save(evento);
-        log.info("✅ Evento externo guardado: {}", dto.getEventoId());
+        log.info("Evento externo guardado: {}", dto.getEventoId());
     }
 
-    // Verifica si ya existe un evento con ese ID
+    // verifica si ya existe un evento con ese ID
     public boolean existeEvento(String eventoId) {
         return eventoRepository.findByEventoId(eventoId).isPresent();
     }
 
-    // Marca un evento como dado de baja
+    // marca un evento como dado de baja
     public boolean darDeBaja(String eventoId) {
         return eventoRepository.findByEventoId(eventoId).map(evento -> {
             if (!evento.isDarDeBaja()) {
                 evento.setDarDeBaja(true);
-                eventoRepository.save(evento); // se guarda el cambio
+                eventoRepository.save(evento); 
                 log.info("Evento externo marcado como dado de baja: {}", eventoId);
             } else {
                 log.info("Evento externo ya estaba dado de baja: {}", eventoId);
