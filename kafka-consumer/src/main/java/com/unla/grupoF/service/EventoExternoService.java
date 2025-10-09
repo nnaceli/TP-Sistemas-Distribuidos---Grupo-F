@@ -39,7 +39,7 @@ public class EventoExternoService {
         return eventoRepository.findByEventoId(eventoId).map(evento -> {
             if (!evento.isDarDeBaja()) {
                 evento.setDarDeBaja(true);
-                eventoRepository.save(evento); // ✅ se guarda el cambio
+                eventoRepository.save(evento); // se guarda el cambio
                 log.info("Evento externo marcado como dado de baja: {}", eventoId);
             } else {
                 log.info("Evento externo ya estaba dado de baja: {}", eventoId);
