@@ -21,7 +21,7 @@ public class KafkaConsumer {
 
     private final SolicitudDonacionService solicitudService;
     private final EventoExternoService eventoService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
     @KafkaListener(topics = {
             "solicitud-donaciones",
