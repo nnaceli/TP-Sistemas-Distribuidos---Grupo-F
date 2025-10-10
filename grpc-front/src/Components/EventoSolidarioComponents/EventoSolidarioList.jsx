@@ -63,7 +63,7 @@ export const EventoSolidarioList = () => {
             
             <button 
                 className="btn-crear" 
-                onClick={() => navigate('/eventos_solidarios/nuevo')}>
+                onClick={() => navigate('/eventos/nuevo')}>
                 + Registrar Nuevo Evento
             </button>
 
@@ -92,7 +92,7 @@ export const EventoSolidarioList = () => {
                                 <td>
                                     <button 
                                         className="btn-modificar"
-                                        onClick={() => navigate(`/eventos_solidarios/editar/${evento.id}`)}>
+                                        onClick={() => navigate(`/eventos/editar/${evento.id}`)}>
                                         Modificar
                                     </button>
                                     <button 
