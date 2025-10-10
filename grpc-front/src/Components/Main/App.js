@@ -1,6 +1,7 @@
 import '../../CSS/App.css';
 import { DonacionList } from '../DonacionComponents/DonacionList';
 import { DonacionForm } from '../DonacionComponents/DonacionForm';
+import { EventoSolidarioList } from '../EventoSolidarioComponents/EventoSolidarioList';
 import { ListaUsuarios } from '../UsuarioComponents/UsuarioList';
 import { UsuarioForm } from '../UsuarioComponents/UsuarioForm';
 import { MasterLayout } from './Master';
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/donaciones" element={<DonacionList />} />
                 <Route path="/donaciones/nueva" element={<DonacionForm/>} />
                 <Route path="/donaciones/editar/:id" element={<DonacionForm/>} />
+                <Route path="/eventos" element={<EventoSolidarioList />} />
               </Routes>
             </MasterLayout>
           } />
