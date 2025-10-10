@@ -12,6 +12,7 @@ export const MasterLayout = ({ children }) => {
                         <li><Link to="/usuarios">Gestión de usuarios</Link></li>
                         <li><Link to="/donaciones">Inventario de donaciones</Link></li>
                         <li><Link to="/gestion3">Eventos solidarios</Link></li>
+                        <li><Link to="/solicitud-donaciones">Solicitar Donaciones a otras ONGs</Link></li>
                     </ul>
                 </nav>
             </aside>

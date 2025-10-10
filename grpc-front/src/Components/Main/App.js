@@ -9,6 +9,7 @@ import { UsuarioDetalle } from '../UsuarioComponents/UsuarioDetalle';
 import { UsuarioEditar } from '../UsuarioComponents/UsuarioEditar';
 import { Login } from '../UsuarioComponents/Login';
 import { Navigate } from 'react-router-dom';
+import SolicitudDonacionForm from '../DonacionComponents/SolicitudDonacionForm';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/donaciones" element={<DonacionList />} />
                 <Route path="/donaciones/nueva" element={<DonacionForm/>} />
                 <Route path="/donaciones/editar/:id" element={<DonacionForm/>} />
+                <Route path="/solicitud-donaciones" element={<SolicitudDonacionForm/>} />
               </Routes>
             </MasterLayout>
           } />
