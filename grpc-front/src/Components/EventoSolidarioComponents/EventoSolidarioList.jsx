@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarEventos } from '../../Service/EventoSolidarioService';
-import '../../CSS/EventoSolidarioList.css';
+import { listarEventos, eliminarEvento } from '../../Service/EventoSolidarioService';
+import '../../CSS/EventoSolidarioList.css'; // Asegúrate de crear este archivo CSS
 
 export const EventoSolidarioList = () => {
     const [eventos, setEventos] = useState([]);
@@ -9,36 +9,49 @@ export const EventoSolidarioList = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    // 1. Lógica de Carga de Datos
     useEffect(() => {
         const fetchEventos = async () => {
             try {
-                const data = await listarEventos();
+                const data = await listarEventos(); 
                 setEventos(data);
                 setLoading(false);
             } catch (err) {
-                setError(err.message);
+                setError(err.message || 'Error desconocido al cargar eventos.');
                 setLoading(false);
             }
         };
         fetchEventos();
     }, []);
 
-    const isFuturo = (fechaEvento) => {
-        // Compara la fecha del evento con la fecha y hora actual
-        return new Date(fechaEvento) > new Date();
-    };
-    
-    // Función de ordenamiento para mostrar futuros primero, luego pasados, y por fecha.
-    const eventosOrdenados = eventos.sort((a, b) => {
-        const aFuturo = isFuturo(a.fecha);
-        const bFuturo = isFuturo(b.fecha);
-        
-        if (aFuturo !== bFuturo) {
-            return aFuturo ? -1 : 1; // Futuros primero
+    // Función para manejar la eliminación lógica del evento
+    const handleEliminar = async (id, nombre) => {
+        if (window.confirm(`¿Está seguro de eliminar el evento: "${nombre}"?`)) {
+            try {
+                await eliminarEvento(id); 
+                
+                alert(`Evento "${nombre}" (ID: ${id}) eliminado exitosamente.`);
+                
+                setEventos(prev => prev.filter(e => e.id !== id)); 
+            } catch (err) {
+                console.error("Error al eliminar el evento:", err);
+                setError(`Error al eliminar: ${err.message}`);
+            }
         }
+    };
 
-        return new Date(a.fecha) - new Date(b.fecha); 
-    });
+    // Función auxiliar para formatear la fecha
+    const formatearFecha = (fechaString) => {
+        if (!fechaString) return 'N/A';
+        try {
+            // Asume que la fecha viene en formato ISO o YYYY-MM-DD
+            const date = new Date(fechaString);
+            // Formato dd/mm/yyyy
+            return date.toLocaleDateString('es-AR', { year: 'numeric', month: '2-digit', day: '2-digit' }); 
+        } catch (e) {
+            return 'Fecha Inválida';
+        }
+    };
 
 
     if (loading) return <p className="loading">Cargando listado de eventos...</p>;
@@ -46,43 +59,53 @@ export const EventoSolidarioList = () => {
 
     return (
         <div className="evento-list-container">
-            <h2>Listado de Eventos Solidarios</h2>
+            <h2>Gestión de Eventos Solidarios</h2>
             
             <button 
                 className="btn-crear" 
                 onClick={() => navigate('/eventos/nuevo')}>
-                + Crear Nuevo Evento (A Futuro)
+                + Registrar Nuevo Evento
             </button>
 
-            <table className="evento-table">
-                <thead>
-                    <tr>
-                        <th>Estado</th>
-                        <th>Nombre</th>
-                        <th>Fecha y Hora</th>
-                        <th>Miembros</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {eventosOrdenados.map(evento => {
-                        const esFuturo = isFuturo(evento.fecha);
-                        return (
-                            <tr key={evento.id} className={esFuturo ? 'evento-futuro' : 'evento-pasado'}>
-                                <td>{esFuturo ? '✨ Futuro' : '✅ Pasado'}</td>
+            {eventos.length === 0 ? (
+                <p>No hay eventos solidarios registrados.</p>
+            ) : (
+                <table className="evento-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha</th>
+                            <th>Miembros Inscritos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {eventos.map(evento => (
+                            <tr key={evento.id}>
+                                <td>{evento.id}</td>
                                 <td>{evento.nombre}</td>
-                                <td>{new Date(evento.fecha).toLocaleString()}</td>
-                                <td>{evento.miembros ? evento.miembros.length : 0}</td>
+                                <td>{evento.descripcion.substring(0, 50)}{evento.descripcion.length > 50 ? '...' : ''}</td>
+                                <td>{formatearFecha(evento.fecha)}</td>
+                                <td>{evento.miembros?.length || 0}</td> {/* Muestra la cantidad de miembros */}
                                 <td>
-                                    <button onClick={() => navigate(`/eventos/${evento.id}`)}>
-                                        Ver Detalle
+                                    <button 
+                                        className="btn-modificar"
+                                        onClick={() => navigate(`/eventos/editar/${evento.id}`)}>
+                                        Modificar
+                                    </button>
+                                    <button 
+                                        className="btn-eliminar"
+                                        onClick={() => handleEliminar(evento.id, evento.nombre)}>
+                                        Eliminar
                                     </button>
                                 </td>
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };

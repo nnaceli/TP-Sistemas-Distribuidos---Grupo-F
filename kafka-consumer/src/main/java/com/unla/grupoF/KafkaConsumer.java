@@ -2,6 +2,7 @@ package com.unla.grupoF;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unla.grupoF.dto.*;
+import com.unla.grupoF.service.AdhesionEventoService;
 import com.unla.grupoF.service.EventoExternoService;
 import com.unla.grupoF.service.SolicitudDonacionService;
 import com.unla.grupoF.util.Constants;
@@ -21,7 +22,8 @@ public class KafkaConsumer {
 
     private final SolicitudDonacionService solicitudService;
     private final EventoExternoService eventoService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final AdhesionEventoService adhesionEventoService;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 
     @KafkaListener(topics = {
             "solicitud-donaciones",
@@ -107,7 +109,14 @@ public class KafkaConsumer {
                 // 🔹 ADHESIÓN A EVENTOS
                 case "adhesion-evento" -> {
                     log.info("Procesando adhesión a evento... (pendiente)");
-                    // TODO: implementar adhesión
+                    AdhesionEventoDTO dto = objectMapper.readValue(message, AdhesionEventoDTO.class);
+
+                    if (dto.getOrganizacionId().equals(Constants.ORG_ID)) {
+                        log.info("Adhesión a evento propio ignorada: {}", dto.getEventoId());
+                    } else {
+                        adhesionEventoService.guardarAdhesion(dto);
+                        log.info("Adhesión registrada correctamente: {} - {}", dto.getNombre(), dto.getEventoId());
+                        }
                 }
 
                 default -> log.info("Tópico no reconocido: {}", topic);
