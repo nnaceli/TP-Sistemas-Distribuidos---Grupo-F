@@ -10,7 +10,7 @@ export const MasterLayout = ({ children }) => {
                 <nav className="sidebar-nav">
                     <ul>
                         <li><Link to="/usuarios">Gestión de usuarios</Link></li>
-                        <li><Link to="/gestion2">Inventario de donaciones</Link></li>
+                        <li><Link to="/donaciones">Inventario de donaciones</Link></li>
                         <li><Link to="/gestion3">Eventos solidarios</Link></li>
                     </ul>
                 </nav>

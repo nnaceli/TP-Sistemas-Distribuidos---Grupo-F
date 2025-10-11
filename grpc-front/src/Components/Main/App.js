@@ -1,4 +1,6 @@
 import '../../CSS/App.css';
+import { DonacionList } from '../DonacionComponents/DonacionList';
+import { DonacionForm } from '../DonacionComponents/DonacionForm';
 import { ListaUsuarios } from '../UsuarioComponents/UsuarioList';
 import { UsuarioForm } from '../UsuarioComponents/UsuarioForm';
 import { MasterLayout } from './Master';
@@ -24,6 +26,9 @@ function App() {
                 <Route path="/usuarios/nuevo" element={<UsuarioForm />} />
                 <Route path="/usuarios/:username" element={<UsuarioDetalle />} />
                 <Route path="/usuarios/:username/editar" element={<UsuarioEditar />} />
+                <Route path="/donaciones" element={<DonacionList />} />
+                <Route path="/donaciones/nueva" element={<DonacionForm/>} />
+                <Route path="/donaciones/editar/:id" element={<DonacionForm/>} />
               </Routes>
             </MasterLayout>
           } />
