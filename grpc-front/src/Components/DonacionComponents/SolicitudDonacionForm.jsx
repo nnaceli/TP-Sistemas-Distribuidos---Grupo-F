@@ -1,4 +1,3 @@
-// /c:/Users/sabri/OneDrive/Documentos/facultad/2do cuat/distribuidos/TP-Sistemas-Distribuidos---Grupo-F/grpc-front/src/Components/DonacionComponents/SolicitudDonacionForm/index.jsx
 import React, { useState } from "react";
 import { DonacionCategoria } from "../../Models/DonacionCategoria";
 import { solicitarDonaciones } from "../../Service/DonacionService";
@@ -13,7 +12,6 @@ import { solicitarDonaciones } from "../../Service/DonacionService";
 */
 
 const emptyDonacion = () => ({
-    id: null,
     categoria: "",
     descripcion: "",
     cantidad: 1
@@ -21,9 +19,22 @@ const emptyDonacion = () => ({
 
 export default function SolicitudDonacionForm({ onSubmit }) {
     const [organizationId] = useState("101"); // fixed to 101
-    const [solicitudId, setSolicitudId] = useState("");
+    const [solicitudId, setSolicitudId] = useState("SOL-");
     const [donaciones, setDonaciones] = useState([emptyDonacion()]);
 
+const handleSolicitudIdChange = (e) => {
+    const value = e.target.value;
+    if (value === "SOL-") {
+        setSolicitudId(value);
+        return;
+    }
+    if (value.startsWith("SOL-")) {
+        const numbers = value.substring(4);
+        if (numbers === "" || /^\d+$/.test(numbers)) {
+            setSolicitudId(value);
+        }
+    }
+};
     const handleDonacionChange = (index, field, value) => {
         setDonaciones((prev) =>
             prev.map((d, i) => (i === index ? { ...d, [field]: value } : d))
@@ -48,9 +59,8 @@ export default function SolicitudDonacionForm({ onSubmit }) {
          try{
              const payload = {
                  organizationId: Number(organizationId),
-                 solicitudId: Number(solicitudId),
+                 solicitudId: solicitudId,
                  donaciones: donaciones.map((d) => ({
-                     id: d.id,
                      categoria: d.categoria?.trim(),
                      cantidad: Number(d.cantidad),
                      descripcion: d.descripcion.trim(),
@@ -59,8 +69,10 @@ export default function SolicitudDonacionForm({ onSubmit }) {
 
 
              const success= await solicitarDonaciones(payload);
-
-            alert("Solicitud de donaciones enviada con éxito.");
+             if(success.ok){
+                alert("Solicitud de donaciones enviada con éxito.");
+             }
+            
         }catch(err){
             alert("Error al enviar la solicitud: " + err.message);
         }
@@ -86,11 +98,13 @@ export default function SolicitudDonacionForm({ onSubmit }) {
                 <label>
                     Solicitud ID
                     <input
-                        type="number"
-                        value={solicitudId}
-                        onChange={(e) => setSolicitudId(e.target.value)}
-                        required
-                    />
+    type="text"
+    value={solicitudId}
+    onChange={handleSolicitudIdChange}
+    pattern="SOL-\d+"
+    placeholder="SOL-123"
+    required
+/>
                 </label>
             </div>
 

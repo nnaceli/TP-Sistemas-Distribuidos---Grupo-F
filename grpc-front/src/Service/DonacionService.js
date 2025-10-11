@@ -1,7 +1,7 @@
 
 const BASE_URL = 'http://127.0.0.1:5000/api/client/donacion';
 // A COLA DE MENSAJES
-const MESSAGE_QUEUE_URL = 'http://127.0.0.1:8086/api/donacion';
+const MESSAGE_QUEUE_URL = 'http://localhost:8085/api/donacion';
 
 const getAuthHeaders = () => {
     const token = JSON.parse(localStorage.getItem('userSession'))?.token;
@@ -133,9 +133,9 @@ export const actualizarDonacion = async (id, donacionData) => {
 //TODO
 export const solicitarDonaciones = async (solicitudData) => {
      try {
-        const response = await fetch(`${MESSAGE_QUEUE_URL}/solicitar`, {
+        console.log("Solicitud que se envía:", solicitudData);
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/solicitud`, {
             method: 'POST',
-            headers: getAuthHeaders(),
             body: JSON.stringify(solicitudData)
         });
 
