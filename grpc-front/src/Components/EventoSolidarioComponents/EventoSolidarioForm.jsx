@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { crearEvento, obtenerEventoPorId, actualizarEvento } from '../../Service/EventoSolidarioService';
+import {crearEvento, obtenerEventoPorId, actualizarEvento} from '../../Service/EventoSolidarioService';
 import '../../CSS/EventoSolidarioForm.css';
-
-// Importa el servicio de usuario para listar miembros si fuera necesario.
-// import { listarUsuariosActivos } from '../../Service/UsuarioService'; 
 
 export const EventoSolidarioForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const isEdit = id && id !== 'nuevo';
-    
+    const isEdit = id && id !== 'nueva';
+
     const [formData, setFormData] = useState({
         nombre: '',
         descripcion: '',
-        fecha: '', // Formato yyyy-MM-ddTHH:mm para input datetime-local
-        miembros: [] // Simplificado por ahora
+        fecha: '', // Formato yyyy-MM-ddTHH:mm
+        miembros: [] // Simplificado
     });
-    const [loading, setLoading] = useState(isEdit);
+
     const [error, setError] = useState(null);
     const [isPastEvent, setIsPastEvent] = useState(false);
 
+
     useEffect(() => {
-        if (isEdit) {
+            if (isEdit) {
             const fetchEvento = async () => {
                 try {
                     const data = await obtenerEventoPorId(id);
@@ -38,10 +36,8 @@ export const EventoSolidarioForm = () => {
                         miembros: data.miembros
                     });
                     setIsPastEvent(isPast);
-                    setLoading(false);
                 } catch (err) {
                     setError('Error al cargar el evento: ' + err.message);
-                    setLoading(false);
                 }
             };
             fetchEvento();
@@ -82,8 +78,6 @@ export const EventoSolidarioForm = () => {
         }
     };
 
-    if (loading) return <p className="loading">Cargando datos...</p>;
-
     return (
         <div className="evento-form-container">
             <h2>{isEdit ? 'Modificar Evento' : 'Crear Nuevo Evento'}</h2>
@@ -99,6 +93,7 @@ export const EventoSolidarioForm = () => {
                         value={formData.nombre} 
                         onChange={handleChange} 
                         required 
+                        disabled={isEdit}
                     />
                 </label>
                 
