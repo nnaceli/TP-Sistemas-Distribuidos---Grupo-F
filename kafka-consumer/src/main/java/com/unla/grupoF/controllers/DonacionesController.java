@@ -1,22 +1,18 @@
 package com.unla.grupoF.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unla.grupoF.KafkaProducer;
 import com.unla.grupoF.dto.BajaSolicitudDonacionDTO;
 import com.unla.grupoF.dto.SolicitudDonacionDTO;
 import com.unla.grupoF.dto.TransferenciaDonacionDTO;
-import com.unla.grupoF.service.DonacionesService;
-import org.springframework.http.HttpStatusCode;
+import com.unla.grupoF.service.DonacionesServiceProducer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/donaciones")
 public class DonacionesController {
-    private final DonacionesService donacionesService;
+    private final DonacionesServiceProducer donacionesService;
 
-    public DonacionesController(DonacionesService donacionesService) {
+    public DonacionesController(DonacionesServiceProducer donacionesService) {
         this.donacionesService = donacionesService;
     }
 

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class DonacionesService {
+public class DonacionesServiceProducer {
     private final KafkaProducer kafkaProducer;
     private final ObjectMapper objectMapper;
 
-    public DonacionesService(KafkaProducer kafkaProducer) {
+    public DonacionesServiceProducer(KafkaProducer kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
         this.objectMapper = new ObjectMapper();
     }

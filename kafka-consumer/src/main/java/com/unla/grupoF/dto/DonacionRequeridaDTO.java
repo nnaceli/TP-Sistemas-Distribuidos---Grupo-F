@@ -1,5 +1,6 @@
 package com.unla.grupoF.dto;
 
+import com.unla.grupoF.entities.Categoria;
 import lombok.*;
 
 @Data

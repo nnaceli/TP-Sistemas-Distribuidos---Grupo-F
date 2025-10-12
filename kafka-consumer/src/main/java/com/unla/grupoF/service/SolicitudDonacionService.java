@@ -3,6 +3,7 @@ package com.unla.grupoF.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unla.grupoF.dto.BajaSolicitudDonacionDTO;
+import com.unla.grupoF.dto.DonacionRequeridaDTO;
 import com.unla.grupoF.dto.SolicitudDonacionDTO;
 import com.unla.grupoF.dto.TransferenciaDonacionDTO;
 import com.unla.grupoF.entities.Categoria;
@@ -16,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.DataInput;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -88,5 +93,27 @@ public class SolicitudDonacionService {
 
     public String convertirDonacionAJson(TransferenciaDonacionDTO.DonacionTransferidaDTO donacionTransferida) throws JsonProcessingException {
         return objectMapper.writeValueAsString(donacionTransferida);
+    }
+
+    public List<SolicitudDonacionDTO> obtenerSolicitudes() throws Exception{
+        List<SolicitudDonacionDTO> solicitudesDtoList = new ArrayList<SolicitudDonacionDTO>();
+        List<SolicitudDonacion> solicitudesEntidad = solicitudRepository.findByEliminadaFalse();
+
+        if (solicitudesEntidad.isEmpty()){
+            throw new Exception("No existen solicitudes");
+        }
+        for (SolicitudDonacion aux : solicitudesEntidad) {
+            List<DonacionRequeridaDTO> donacionRequeridaDTOList = new ArrayList<>();
+            for (DonacionRequerida donacionRequerida : aux.getDonaciones()){
+                DonacionRequeridaDTO dto = new DonacionRequeridaDTO();
+                dto.setCategoria(donacionRequerida.getCategoria().name());
+                dto.setDescripcion(donacionRequerida.getDescripcion());
+                donacionRequeridaDTOList.add(dto);
+            }
+            SolicitudDonacionDTO dto = new SolicitudDonacionDTO(aux.getOrganizacionId(), aux.getSolicitudId(), donacionRequeridaDTOList);
+            solicitudesDtoList.add(dto);
+        }
+
+        return solicitudesDtoList;
     }
 }

@@ -1,11 +1,18 @@
 package com.unla.grupoF.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unla.grupoF.dto.EventoDTO;
 import com.unla.grupoF.entities.EventoExterno;
+import com.unla.grupoF.mappers.EventoMapper;
 import com.unla.grupoF.repositories.EventoExternoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -13,6 +20,9 @@ import org.springframework.stereotype.Service;
 public class EventoExternoService {
 
     private final EventoExternoRepository eventoRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     // Guarda un evento externo nuevo
     public void guardarEventoExterno(EventoDTO dto) {
@@ -49,6 +59,19 @@ public class EventoExternoService {
             log.warn("Evento externo no encontrado para dar de baja: {}", eventoId);
             return false;
         });
+    }
+
+    public List<EventoDTO> obtenerEventos() throws Exception{
+        List<EventoDTO> dtoList = new ArrayList<>();
+        List<EventoExterno> entityList = eventoRepository.findByDarDeBajaFalse();
+
+        if (entityList.isEmpty()){
+            throw new Exception("No existen eventos externos");
+        }
+        for (EventoExterno aux : entityList) {
+            dtoList.add(EventoMapper.toDto(aux));
+        }
+        return dtoList;
     }
 }
 
