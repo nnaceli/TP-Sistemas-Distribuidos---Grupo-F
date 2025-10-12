@@ -1,5 +1,6 @@
 package com.unla.grupoF.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class SolicitudDonacion {
     private String solicitudId;
 
     @OneToMany(mappedBy = "solicitudDonacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference //Resolvemos problema de recursividad infinita con DonacionRequerida
     private List<DonacionRequerida> donaciones;
 
     @Column(nullable = false)

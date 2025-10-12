@@ -1,5 +1,6 @@
 package com.unla.grupoF.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,5 +25,6 @@ public class DonacionRequerida {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "solicitud_id")
+    @JsonBackReference //Resolcion a problema de recursividad infinita con tabla a la que llama
     private SolicitudDonacion solicitudDonacion;
 }
