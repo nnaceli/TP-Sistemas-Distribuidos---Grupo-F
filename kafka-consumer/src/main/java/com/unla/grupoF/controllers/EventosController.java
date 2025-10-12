@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unla.grupoF.KafkaProducer;
 import com.unla.grupoF.dto.EventoDTO;
 import com.unla.grupoF.service.EventoExternoService;
+import com.unla.grupoF.service.EventoExternoServiceProducer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +15,11 @@ import java.util.List;
 @RequestMapping("/api/eventos")
 public class EventosController {
     private final EventoExternoService eventoExternoService;
+    public final EventoExternoServiceProducer eventoExternoServiceProducer;
 
-    public EventosController(EventoExternoService eventoExternoService) {
+    public EventosController(EventoExternoService eventoExternoService, EventoExternoServiceProducer eventoExternoServiceProducer) {
         this.eventoExternoService = eventoExternoService;
+        this.eventoExternoServiceProducer = eventoExternoServiceProducer;
     }
 
     @GetMapping("/listarEventos")
@@ -26,6 +29,25 @@ public class EventosController {
             return ResponseEntity.ok().body(lista);
         }
         catch(Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+    @PostMapping("/publicarEvento")
+    public ResponseEntity<Object> publicarEvento(@RequestBody EventoDTO dto){
+        try{
+            eventoExternoServiceProducer.publicarEvento(dto);
+            return ResponseEntity.ok().body("Se publicó la creacion del evento");
+        }catch(Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/publicarBajaEvento")
+    public ResponseEntity<Object> publicarBajaEvento(@RequestBody EventoDTO dto){
+        try{
+            eventoExternoServiceProducer.bajaEvento(dto);
+            return ResponseEntity.ok().body("Se publicó la baja del evento");
+        }catch(Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
