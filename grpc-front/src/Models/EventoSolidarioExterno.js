@@ -1,7 +1,7 @@
 export default class EventoSolidarioExterno{
     constructor(id, nombre, descripcion, fecha){
         this.organizacionId = 101;
-        this.eventoId = id;
+        this.eventoId = "EVT-"+ id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fecha = fecha; 

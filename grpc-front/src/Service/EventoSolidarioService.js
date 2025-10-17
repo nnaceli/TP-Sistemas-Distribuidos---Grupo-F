@@ -190,17 +190,20 @@ export const exponerEvento = async (id) => {
         if (!eventoAExponer) {
             throw new Error('Evento no encontrado');
         }
-
+        console.log("Evento a exponer:", eventoAExponer);
         // convertirlo a modelo.EventoSolidarioExterno
-        const notificacionPublicarEvento = {
-            id: eventoAExponer.id,
-            nombre: eventoAExponer.nombre,
-            descripcion: eventoAExponer.descripcion,
-            fecha: eventoAExponer.fecha
-        };
-        //TODO cambiar URL a la de la cola de mensajes
-        const response = await fetch(`${MESSAGE_QUEUE_URL}/publicar`, {
+        const notificacionPublicarEvento = new EventoSolidarioExterno(
+            eventoAExponer.id,
+            eventoAExponer.nombre,
+            eventoAExponer.descripcion,
+            eventoAExponer.fecha
+        );
+        console.log("Notificacion a enviar:", notificacionPublicarEvento);
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/publicarEvento`, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(notificacionPublicarEvento)
         });
 
@@ -218,8 +221,8 @@ export const exponerEvento = async (id) => {
 
 export const listarEventosExternos = async () => {
     try {
-        //TODO cambiar URL a la de la cola de mensajes
-        const response = await fetch(`${MESSAGE_QUEUE_URL}/listar`, {
+
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/listarEventos`, {
             method: 'GET'
         });
         if (!response.ok) {
