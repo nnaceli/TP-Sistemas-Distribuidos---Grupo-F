@@ -13,6 +13,7 @@ import { Login } from '../UsuarioComponents/Login';
 import { Navigate } from 'react-router-dom';
 import SolicitudDonacionForm from '../DonacionComponents/SolicitudDonacionForm';
 import EventosExternosList from '../EventoSolidarioComponents/EventosExternosList';
+import { SolicitudDonacionList } from '../DonacionComponents/SolicitudDonacionList';
 
 function App() {
   return (
@@ -36,7 +37,8 @@ function App() {
                 <Route path="/eventos" element={<EventoSolidarioList />} />
                 <Route path="/eventos/nuevo" element={<EventoSolidarioForm />} />
                 <Route path="/eventos/editar/:id" element={<EventoSolidarioForm />} />
-                <Route path="/solicitud-donaciones" element={<SolicitudDonacionForm/>} />
+                <Route path="/solicitud-donaciones" element={<SolicitudDonacionList/>} />
+                <Route path="/solicitud-donaciones/nueva" element={<SolicitudDonacionForm/>} />
                 <Route path="/otros-eventos" element={<EventosExternosList />} />
               </Routes>
             </MasterLayout>

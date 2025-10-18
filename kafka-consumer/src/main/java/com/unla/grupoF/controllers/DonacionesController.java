@@ -4,10 +4,12 @@ import com.unla.grupoF.dto.BajaSolicitudDonacionDTO;
 import com.unla.grupoF.dto.SolicitudDonacionDTO;
 import com.unla.grupoF.dto.TransferenciaDonacionDTO;
 import com.unla.grupoF.service.DonacionesServiceProducer;
+import com.unla.grupoF.service.SolicitudDonacionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -15,8 +17,10 @@ import java.util.Map;
 @RequestMapping("/api/donaciones")
 public class DonacionesController {
     private final DonacionesServiceProducer donacionesService;
+    private final SolicitudDonacionService solicitudDonacionService;
 
-    public DonacionesController(DonacionesServiceProducer donacionesService) {
+    public DonacionesController(DonacionesServiceProducer donacionesService, SolicitudDonacionService solicitudDonacionService) {
+        this.solicitudDonacionService = solicitudDonacionService;
         this.donacionesService = donacionesService;
     }
 
@@ -50,6 +54,13 @@ public class DonacionesController {
         }
     }
 
-    //TODO: listar las solicitudes de donacion
-
+    @GetMapping(value = "/listarSolicitudes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> listarSolicitudes() {
+        try {
+            List<SolicitudDonacionDTO> lista = solicitudDonacionService.obtenerSolicitudes();
+            return ResponseEntity.ok().body(lista);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
 }

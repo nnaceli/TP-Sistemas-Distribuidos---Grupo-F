@@ -102,7 +102,7 @@ const EventosExternosList = () => {
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{e.descripcion}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{formatFechaHora(e.fechaHora)}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>
-                                            <button onClick={() => handleInscribirse(e, e.nombre)}
+                                            <button className="btn-editar" onClick={() => handleInscribirse(e, e.nombre)}
                                                disabled={isUserInscribed(e)} >
                                         {isUserInscribed(e) ? 'Inscripto' : 'Inscribirse'}</button>
                                             

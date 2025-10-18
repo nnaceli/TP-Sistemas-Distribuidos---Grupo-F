@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DonacionCategoria } from "../../Models/DonacionCategoria";
 import { solicitarDonaciones } from "../../Service/DonacionService";
-
 
 /*
     SolicitudDonacionForm
@@ -18,23 +18,24 @@ const emptyDonacion = () => ({
 });
 
 export default function SolicitudDonacionForm({ onSubmit }) {
-    const [organizationId] = useState("101"); // fixed to 101
+    const navigate = useNavigate();
+    const [organizacionId] = useState("101"); // fixed to 101
     const [solicitudId, setSolicitudId] = useState("SOL-");
     const [donaciones, setDonaciones] = useState([emptyDonacion()]);
 
-const handleSolicitudIdChange = (e) => {
-    const value = e.target.value;
-    if (value === "SOL-") {
-        setSolicitudId(value);
-        return;
-    }
-    if (value.startsWith("SOL-")) {
-        const numbers = value.substring(4);
-        if (numbers === "" || /^\d+$/.test(numbers)) {
+    const handleSolicitudIdChange = (e) => {
+        const value = e.target.value;
+        if (value === "SOL-") {
             setSolicitudId(value);
+            return;
         }
-    }
-};
+        if (value.startsWith("SOL-")) {
+            const numbers = value.substring(4);
+            if (numbers === "" || /^\d+$/.test(numbers)) {
+                setSolicitudId(value);
+            }
+        }
+    };
     const handleDonacionChange = (index, field, value) => {
         setDonaciones((prev) =>
             prev.map((d, i) => (i === index ? { ...d, [field]: value } : d))
@@ -58,7 +59,7 @@ const handleSolicitudIdChange = (e) => {
         e.preventDefault();
          try{
              const payload = {
-                 organizationId: Number(organizationId),
+                 organizacionId: Number(organizacionId),
                  solicitudId: solicitudId,
                  donaciones: donaciones.map((d) => ({
                      categoria: d.categoria?.trim(),
@@ -67,18 +68,21 @@ const handleSolicitudIdChange = (e) => {
                  })),
              };
 
-
-             const success= await solicitarDonaciones(payload);
-             if(success.ok){
-                alert("Solicitud de donaciones enviada con éxito.");
+             const success = await solicitarDonaciones(payload);
+             if (success.ok) {
+                // redirect on success (HTTP 200)
+                navigate("/solicitud-donaciones");
+                return;
              }
+
+             // handle non-ok response
+             const errText = await (success.text ? success.text() : Promise.resolve("Request failed"));
+             alert("Error al enviar la solicitud: " + errText);
             
         }catch(err){
             alert("Error al enviar la solicitud: " + err.message);
         }
     };
-
-    
 
     return (
         <form onSubmit={handleSubmit}>
@@ -87,7 +91,7 @@ const handleSolicitudIdChange = (e) => {
                     Organization ID
                     <input
                         type="number"
-                        value={organizationId}
+                        value={organizacionId}
                         readOnly
                         aria-readonly="true"
                     />
@@ -98,13 +102,13 @@ const handleSolicitudIdChange = (e) => {
                 <label>
                     Solicitud ID
                     <input
-    type="text"
-    value={solicitudId}
-    onChange={handleSolicitudIdChange}
-    pattern="SOL-\d+"
-    placeholder="SOL-123"
-    required
-/>
+                        type="text"
+                        value={solicitudId}
+                        onChange={handleSolicitudIdChange}
+                        pattern="SOL-\d+"
+                        placeholder="SOL-123"
+                        required
+                    />
                 </label>
             </div>
 
