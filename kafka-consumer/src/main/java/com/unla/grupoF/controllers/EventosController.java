@@ -1,5 +1,6 @@
 package com.unla.grupoF.controllers;
 
+import com.unla.grupoF.dto.AdhesionEventoDTO;
 import com.unla.grupoF.dto.EventoDTO;
 import com.unla.grupoF.service.EventoExternoService;
 import com.unla.grupoF.service.EventoExternoServiceProducer;
@@ -54,4 +55,17 @@ public class EventosController {
                     .body(Collections.singletonMap("error", e.getMessage()));
         }
     }
+
+    @PostMapping("/adhesionEvento")
+    public ResponseEntity<Object> adhesionEvento( @RequestBody AdhesionEventoDTO dto) {
+        try {
+            eventoExternoServiceProducer.adhesionEvento(dto);
+            return ResponseEntity.ok()
+                    .body(Collections.singletonMap("message", "Se publicó la adhesión al evento"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
 }

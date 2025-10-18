@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unla.grupoF.KafkaProducer;
+import com.unla.grupoF.dto.AdhesionEventoDTO;
 import com.unla.grupoF.dto.EventoDTO;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,15 @@ public class EventoExternoServiceProducer {
             throw new Exception("El cuerpo del request esta incompleto o es nulo");
         }
         String topic = "baja-evento-solidario";
+        String mensaje = objectMapper.writeValueAsString(dto);
+        kafkaProducer.enviarMensaje(topic, mensaje);
+    }
+
+    public void adhesionEvento(AdhesionEventoDTO dto) throws Exception{
+        if (dto == null) {
+            throw new Exception("El cuerpo del request esta incompleto o es nulo");
+        }
+        String topic = "adhesion-evento";
         String mensaje = objectMapper.writeValueAsString(dto);
         kafkaProducer.enviarMensaje(topic, mensaje);
     }

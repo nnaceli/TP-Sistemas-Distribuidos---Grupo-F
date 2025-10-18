@@ -49,4 +49,7 @@ public class DonacionesController {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
+
+    //TODO: listar las solicitudes de donacion
+
 }

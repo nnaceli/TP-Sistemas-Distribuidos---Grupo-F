@@ -129,7 +129,6 @@ export const actualizarDonacion = async (id, donacionData) => {
     }
 };
 
-//TODO
 export const solicitarDonaciones = async (solicitudData) => {
     try {
         console.log("Solicitud que se envía:", solicitudData);
@@ -162,3 +161,26 @@ export const solicitarDonaciones = async (solicitudData) => {
         throw error;
     }
 }
+
+//TODO: habilitar cuando se implemente el endpoint en la cola de mensajes
+// export const traerSolicitudesDonaciones = async () => {
+//     try {
+//         const response = await fetch(`${MESSAGE_QUEUE_URL}/solicitudes`, {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         if (!response.ok) {
+//             const error = await response.json();
+//             throw new Error(error?.error || 'Error al traer solicitudes de donaciones');
+//         }
+//         const data = await response.json();
+//         return data;
+//     } catch (error) {
+//         console.error('Error en traerSolicitudesDonaciones:', error);
+//         throw error;
+//     }   
+// };
+
+//TODO: a partir de la vista de solicitudes, un boton de transferir donaciones
