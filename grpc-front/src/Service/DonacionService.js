@@ -129,7 +129,6 @@ export const actualizarDonacion = async (id, donacionData) => {
     }
 };
 
-//TODO
 export const solicitarDonaciones = async (solicitudData) => {
     try {
         console.log("Solicitud que se envía:", solicitudData);
@@ -162,3 +161,53 @@ export const solicitarDonaciones = async (solicitudData) => {
         throw error;
     }
 }
+
+export const listarSolicitudesDonaciones = async () => {
+    try {
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/listarSolicitudes`, {
+            method: 'GET'
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al traer solicitudes de donaciones');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en traerSolicitudesDonaciones:', error);
+        throw error;
+    }   
+};
+
+export const eliminarSolicitud = async (solicitud) => {
+    try {
+        const payload = {
+            organizacionId: solicitud.organizacionId,
+            solicitudId: solicitud.solicitudId ?? solicitud.id ?? solicitud._id
+        };
+
+        if (!payload.organizacionId || !payload.solicitudId) {
+            throw new Error('organizacionId and solicitudId are required to eliminarSolicitud');
+        }
+
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/baja`, {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al eliminar solicitud de donación');
+        }
+        const data = await response.json();
+        return data.mensaje;
+    }
+    catch (error) {
+    console.error('Error en eliminarSolicitud:', error);
+    throw error;
+};
+}
+
+//TODO: a partir de la vista de solicitudes, un boton de transferir donaciones

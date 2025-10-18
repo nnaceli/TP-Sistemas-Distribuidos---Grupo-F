@@ -38,7 +38,13 @@ const EventosExternosList = () => {
             fetchEventos();
         }, []);
 
-    const handleInscribirse = async (id, nombre) => {
+            const isUserInscribed = (evento) => {
+        const userSession = JSON.parse(localStorage.getItem('userSession'));
+        const username = userSession?.username;
+        return false; // Lógica para verificar si el usuario está inscripto en el evento
+    };
+
+    const handleInscribirse = async (evento, nombre) => {
             const userSession = JSON.parse(localStorage.getItem('userSession'));
             const username = userSession?.username;
     
@@ -48,17 +54,8 @@ const EventosExternosList = () => {
             }
             if (window.confirm(`¿quiere inscribirse como voluntario a: "${nombre}"?`)) {
                 try {
-                    await inscribirUsuarioAEventoExterno(id,username);
-                                   setEventos(prev => prev.map(evento => {
-                        if (evento.id === id) {
-                            return {
-                                ...evento,
-                                miembros: [...(evento.miembros || []), username]
-                            };
-                        }
-                        return evento;
-                    }));
-                    
+                    await inscribirUsuarioAEventoExterno(evento,username);
+                              
                     alert(`Ha sido inscripto al evento`);
                 } catch (err) {
                     console.error("Error al inscribirse al evento:", err);
@@ -98,12 +95,18 @@ const EventosExternosList = () => {
                             </thead>
                             <tbody>
                                 {eventos.map((e) => (
-                                    <tr key={e.eventoId || `${e.organizationId}-${Math.random()}`} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                                        <td style={{ padding: "8px", verticalAlign: "top" }}>{e.organizationId}</td>
+                                    <tr key={e.eventoId || `${e.organizacionId}`} style={{ borderBottom: "1px solid #f0f0f0" }}>
+                                        <td style={{ padding: "8px", verticalAlign: "top" }}>{e.organizacionId}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{e.eventoId}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{e.nombre}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{e.descripcion}</td>
                                         <td style={{ padding: "8px", verticalAlign: "top" }}>{formatFechaHora(e.fechaHora)}</td>
+                                        <td style={{ padding: "8px", verticalAlign: "top" }}>
+                                            <button className="btn-editar" onClick={() => handleInscribirse(e, e.nombre)}
+                                               disabled={isUserInscribed(e)} >
+                                        {isUserInscribed(e) ? 'Inscripto' : 'Inscribirse'}</button>
+                                            
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -119,7 +122,7 @@ EventosExternosList.propTypes = {
     apiUrl: PropTypes.string,
     initialEventos: PropTypes.arrayOf(
         PropTypes.shape({
-            organizationId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+            organizacionId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
             eventoId: PropTypes.string,
             nombre: PropTypes.string,
             descripcion: PropTypes.string,

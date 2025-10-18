@@ -1,3 +1,4 @@
+import AdhesionEvento from '../Models/AdhesionEvento';
 import EventoSolidario from '../Models/EventoSolidario';
 import EventoSolidarioExterno from '../Models/EventoSolidarioExterno';
 import { obtenerUsuarioPorUsername } from './UsuarioService';
@@ -120,7 +121,6 @@ export const eliminarEvento = async (id) => {
             eventoAEliminar.fecha
         );
         //COMUNICAR BAJA DE EVENTO A OTRAS ORGANIZACIONES
-        //TODO cambiar URL a la de la cola de mensajes
         const responseProd= await fetch(`${MESSAGE_QUEUE_URL}/eliminar`, {
             method: 'POST',
             body: JSON.stringify(notificacionBajaEvento )
@@ -236,16 +236,22 @@ export const listarEventosExternos = async () => {
     }
 };
 
-export const inscribirUsuarioAEventoExterno = async (eventoId, username) => {
+export const inscribirUsuarioAEventoExterno = async (evento, username) => {
     try {
         const usuario = await obtenerUsuarioPorUsername(username);
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
-        //TODO cambiar URL a la de la cola de mensajes
-        const response = await fetch(`${MESSAGE_QUEUE_URL}/inscribir/${eventoId}`, {
-            method: 'PUT',
-            body: JSON.stringify({ miembros: [usuario.username] })
+
+        const adhesionData = AdhesionEvento.fromEventoYUsuario(evento, usuario);
+        console.log('Adhesion que se envía:', adhesionData);
+
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/adhesionEvento`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify( adhesionData  )
         });
         if (!response.ok) {
             const error = await response.json();
