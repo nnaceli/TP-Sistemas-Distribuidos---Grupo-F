@@ -11,6 +11,8 @@ import { UsuarioDetalle } from '../UsuarioComponents/UsuarioDetalle';
 import { UsuarioEditar } from '../UsuarioComponents/UsuarioEditar';
 import { Login } from '../UsuarioComponents/Login';
 import { Navigate } from 'react-router-dom';
+import SolicitudDonacionForm from '../DonacionComponents/SolicitudDonacionForm';
+import EventosExternosList from '../EventoSolidarioComponents/EventosExternosList';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
                 <Route path="/eventos" element={<EventoSolidarioList />} />
                 <Route path="/eventos/nuevo" element={<EventoSolidarioForm />} />
                 <Route path="/eventos/editar/:id" element={<EventoSolidarioForm />} />
+                <Route path="/solicitud-donaciones" element={<SolicitudDonacionForm/>} />
+                <Route path="/otros-eventos" element={<EventosExternosList />} />
               </Routes>
             </MasterLayout>
           } />

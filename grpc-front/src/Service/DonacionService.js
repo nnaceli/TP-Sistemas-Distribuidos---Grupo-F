@@ -1,7 +1,6 @@
-import Donacion from '../Models/Donacion'; 
-import { DonacionCategoria } from '../Models/DonacionCategoria';
-
 const BASE_URL = 'http://127.0.0.1:5000/api/client/donacion';
+// A COLA DE MENSAJES
+const MESSAGE_QUEUE_URL = 'http://127.0.0.1:8085/api/donaciones';
 
 const getAuthHeaders = () => {
     const token = JSON.parse(localStorage.getItem('userSession'))?.token;
@@ -129,3 +128,37 @@ export const actualizarDonacion = async (id, donacionData) => {
         throw error;
     }
 };
+
+//TODO
+export const solicitarDonaciones = async (solicitudData) => {
+    try {
+        console.log("Solicitud que se envía:", solicitudData);
+        const url = `${MESSAGE_QUEUE_URL}/solicitud`;
+        console.log("URL de destino:", url);
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(solicitudData)
+                });
+            console.log("Fetch response status:", response.status, response.statusText);
+
+        if (response.status === 204) {
+            return { ok: true };
+        }
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error("Error response body:", errorBody);
+            throw new Error(`Error al solicitar donaciones: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return { ok: true, data };
+    } catch (error) {
+        console.error('Error al solicitar donaciones:', error);
+        throw error;
+    }
+}

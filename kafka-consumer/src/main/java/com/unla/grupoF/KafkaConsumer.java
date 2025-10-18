@@ -108,7 +108,7 @@ public class KafkaConsumer {
 
                 // 🔹 ADHESIÓN A EVENTOS
                 case "adhesion-evento" -> {
-                    log.info("Procesando adhesión a evento... (pendiente)");
+                    log.info("Procesando adhesión a evento...");
                     AdhesionEventoDTO dto = objectMapper.readValue(message, AdhesionEventoDTO.class);
 
                     if (dto.getOrganizacionId().equals(Constants.ORG_ID)) {

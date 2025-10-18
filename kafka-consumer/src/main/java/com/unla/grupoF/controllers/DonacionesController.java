@@ -4,9 +4,13 @@ import com.unla.grupoF.dto.BajaSolicitudDonacionDTO;
 import com.unla.grupoF.dto.SolicitudDonacionDTO;
 import com.unla.grupoF.dto.TransferenciaDonacionDTO;
 import com.unla.grupoF.service.DonacionesServiceProducer;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/donaciones")
 public class DonacionesController {
@@ -16,37 +20,33 @@ public class DonacionesController {
         this.donacionesService = donacionesService;
     }
 
-
-    @PostMapping("/solicitud")
-    public ResponseEntity<String> solicitudDonaciones(@RequestBody SolicitudDonacionDTO dto) {
+    @PostMapping(value = "/solicitud", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> solicitudDonaciones(@RequestBody SolicitudDonacionDTO dto) {
         try {
             donacionesService.solicitudDonaciones(dto);
-            return ResponseEntity.ok("Se envio el mensaje");
-        }
-        catch(Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.ok(Map.of("message", "Se envió el mensaje"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
-    @DeleteMapping("/baja")
-    public ResponseEntity<String> bajaDonacion(@RequestBody BajaSolicitudDonacionDTO dto) {
+    @DeleteMapping(value = "/baja", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> bajaDonacion(@RequestBody BajaSolicitudDonacionDTO dto) {
         try {
             donacionesService.bajaDonacion(dto);
-            return ResponseEntity.ok("Se envio el mensaje");
-        }
-        catch(Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.ok(Map.of("message", "Se envió el mensaje"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 
-    @PutMapping("/transferir")
-    public ResponseEntity<String> transferenciaDonacion(@RequestBody TransferenciaDonacionDTO dto) {
+    @PutMapping(value = "/transferir", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> transferenciaDonacion(@RequestBody TransferenciaDonacionDTO dto) {
         try {
             donacionesService.transferenciaDonacion(dto);
-            return ResponseEntity.ok("Se envio el mensaje");
-        }
-        catch(Exception e){
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.ok(Map.of("message", "Se envió el mensaje"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
         }
     }
 }

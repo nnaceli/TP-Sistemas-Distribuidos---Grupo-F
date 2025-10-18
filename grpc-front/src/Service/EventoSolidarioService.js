@@ -1,6 +1,10 @@
 import EventoSolidario from '../Models/EventoSolidario';
+import EventoSolidarioExterno from '../Models/EventoSolidarioExterno';
+import { obtenerUsuarioPorUsername } from './UsuarioService';
 
 const BASE_URL = 'http://127.0.0.1:5000/api/client/eventos';
+// A COLA DE MENSAJES
+const MESSAGE_QUEUE_URL = 'http://localhost:8085/api/eventos';
 
 
 const getAuthHeaders = () => {
@@ -91,6 +95,13 @@ export const obtenerEventoPorId = async (id) => {
 
 export const eliminarEvento = async (id) => {
     try {
+
+        const eventoAEliminar = await obtenerEventoPorId(id);
+
+        if (!eventoAEliminar) {
+            throw new Error('Evento no encontrado');
+        }
+
         const response = await fetch(`${BASE_URL}/${id}`, {
             method: 'DELETE',
             headers: getAuthHeaders()
@@ -100,8 +111,22 @@ export const eliminarEvento = async (id) => {
             const error = await response.json();
             throw new Error(error?.error || 'Error al eliminar evento');
         }
+        
+        // convertirlo a modelo.EventoSolidarioExterno
+        const notificacionBajaEvento = new EventoSolidarioExterno(
+            eventoAEliminar.id,
+            eventoAEliminar.nombre,
+            eventoAEliminar.descripcion,
+            eventoAEliminar.fecha
+        );
+        //COMUNICAR BAJA DE EVENTO A OTRAS ORGANIZACIONES
+        //TODO cambiar URL a la de la cola de mensajes
+        const responseProd= await fetch(`${MESSAGE_QUEUE_URL}/eliminar`, {
+            method: 'POST',
+            body: JSON.stringify(notificacionBajaEvento )
+        });
 
-        const data = await response.json();
+        const data = await responseProd.json();
         return data.mensaje;
     } catch (error) {
         console.error('Error en eliminarEvento:', error);
@@ -127,6 +152,109 @@ export const actualizarEvento = async (id, eventoData) => {
         return data;
     } catch (error) {
         console.error('Error en actualizarEvento:', error);
+        throw error;
+    }
+};
+
+export const inscribirUsuario = async (eventoId, username) => {
+    try {
+        const usuario= await obtenerUsuarioPorUsername(username);
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');
+        }
+
+        const miembrosPayload = [ usuario.username ];
+        console.log('Payload de miembros:', miembrosPayload);
+        const response = await fetch(`${BASE_URL}/inscribirMiembro/${eventoId}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ miembros: miembrosPayload })
+        });
+        console.log('Respuesta de la inscripcion:', response);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al inscribir usuario');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al inscribir usuario:', error);
+        throw error;
+    }
+};
+
+export const exponerEvento = async (id) => {
+    try {
+        const eventoAExponer = await obtenerEventoPorId(id);
+
+        if (!eventoAExponer) {
+            throw new Error('Evento no encontrado');
+        }
+        console.log("Evento a exponer:", eventoAExponer);
+        // convertirlo a modelo.EventoSolidarioExterno
+        const notificacionPublicarEvento = new EventoSolidarioExterno(
+            eventoAExponer.id,
+            eventoAExponer.nombre,
+            eventoAExponer.descripcion,
+            eventoAExponer.fecha
+        );
+        console.log("Notificacion a enviar:", notificacionPublicarEvento);
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/publicarEvento`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(notificacionPublicarEvento)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al exponer evento');
+        }
+        const data = await response.json();
+        return data.mensaje;
+    } catch (error) {
+        console.error('Error en exponerEvento:', error);
+        throw error;
+    }
+};
+
+export const listarEventosExternos = async () => {
+    try {
+
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/listarEventos`, {
+            method: 'GET'
+        });
+        if (!response.ok) {
+            throw new Error('Error al obtener eventos externos');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en listarEventosExternos:', error);
+        return [];
+    }
+};
+
+export const inscribirUsuarioAEventoExterno = async (eventoId, username) => {
+    try {
+        const usuario = await obtenerUsuarioPorUsername(username);
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');
+        }
+        //TODO cambiar URL a la de la cola de mensajes
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/inscribir/${eventoId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ miembros: [usuario.username] })
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al inscribir usuario en evento externo');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al inscribir usuario en evento externo:', error);
         throw error;
     }
 };
