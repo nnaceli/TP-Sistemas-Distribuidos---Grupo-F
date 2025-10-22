@@ -1,0 +1,38 @@
+.transferencia-container {
+  padding: 20px;
+}
+
+.transferencia-form select {
+  padding: 6px;
+  margin-bottom: 20px;
+}
+
+.transferencia-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.transferencia-table th,
+.transferencia-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.transferencia-actions {
+  margin-top: 20px;
+}
+
+.btn-transferir {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  margin-right: 10px;
+}
+
+.btn-cancelar {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 16px;
+}
