@@ -210,4 +210,37 @@ export const eliminarSolicitud = async (solicitud) => {
 };
 }
 
-//TODO: a partir de la vista de solicitudes, un boton de transferir donaciones
+export const transferirDonaciones = async (transferData) => {
+    try {
+        console.log("Transferencia que se envía:", transferData);
+        const url = `${MESSAGE_QUEUE_URL}/transferir`;
+        console.log("URL de transferencia:", url);
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(transferData)
+        });
+
+        console.log("Fetch transfer response:", response.status, response.statusText);
+
+        if (response.status === 204) {
+            return { ok: true };
+        }
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error("Error response body (transferirDonaciones):", errorBody);
+            throw new Error(`Error al transferir donaciones: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return { ok: true, data };
+    } catch (error) {
+        console.error('Error en transferirDonaciones:', error);
+        throw error;
+    }
+};
+
