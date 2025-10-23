@@ -12,6 +12,7 @@ export const MasterLayout = ({ children }) => {
                         <li><Link to="/usuarios">Gestión de usuarios</Link></li>
                         <li><Link to="/donaciones">Inventario de donaciones</Link></li>
                         <li><Link to="/eventos">Eventos solidarios</Link></li>
+                        <li><Link to="/soapclient/input/">Soap Client</Link></li>
                     </ul>
                 </nav>
             </aside>

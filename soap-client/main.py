@@ -1,12 +1,14 @@
-from client.client import get_associations, get_presidents
+from flask import Flask
+from flask_cors import CORS
+from controllers.soap_client_controller import soapclientBp
 
-if __name__ == "__main__":
-    ids = [6, 5, 8, 10]
+app = Flask(__name__)
+CORS(app)  # Esto habilita CORS para todas las rutas
 
-    print("Asociaciones:")
-    asociaciones = get_associations(ids)
-    print(asociaciones)
+baseUrl = "/api/soap-client"
 
-    print("\nPresidentes:")
-    presidentes = get_presidents(ids)
-    print(presidentes)
+#Blueprints
+app.register_blueprint(soapclientBp, url_prefix = baseUrl + '/info')
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8888)
