@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarSolicitudesDonaciones, eliminarSolicitud } from '../../Service/DonacionService';
-import { DonacionCategoria } from '../../Models/DonacionCategoria';
-import { listarSolicitudesDonaciones, eliminarSolicitud } from '../../Service/DonacionService';
 import { listarSolicitudesDonaciones, eliminarSolicitud, transferirDonaciones } from '../../Service/DonacionService';
 import '../../CSS/DonacionList.css';
 
@@ -26,10 +23,6 @@ export const SolicitudDonacionList = () => {
         fetchDonaciones();
     }, []);
 
-    const getNombreCategoria = (valor) => {
-        return DonacionCategoria[valor] || 'Desconocida';
-    };
-
     const handleEliminar = async (solicitud ) => {
         if (window.confirm(`¿Está seguro de dar de baja la solicitud: "${solicitud.solicitudId}"?`)) {
             try {
@@ -45,28 +38,8 @@ export const SolicitudDonacionList = () => {
         }
     };
 
-    //TODO
-    //handleTransferir
     const handleTransferir = async (solicitud) => {
-        if (!window.confirm(`¿Confirmar transferencia de donaciones para la solicitud "${solicitud.solicitudId}" a la ONG ${solicitud.organizacionId}?`)) return;
-        try {
-            const payload = {
-                solicitudId: solicitud.solicitudId,
-                organizacionId: 101, // o reemplazar por el id correcto de la ONG donante
-                donaciones: (solicitud.donaciones || []).map(d => ({
-                    categoria: d.categoria,
-                    descripcion: d.descripcion,
-                    cantidad: Number(d.cantidad) || 0
-                }))
-            };
-            await transferirDonaciones(payload);
-            alert(`Transferencia para ${solicitud.solicitudId} notificada correctamente.`);
-            setSolicitudes(prev => prev.filter(s => s.solicitudId !== solicitud.solicitudId));
-        } catch (err) {
-            console.error('Error al transferir:', err);
-            setError(err.message || String(err));
-            alert(`Error al transferir: ${err.message || err}`);
-        }
+       navigate(`/solicitud-donaciones/transferir`, { state: { solicitud } });
     };
 
     if (loading) return <p className="loading">Cargando SOLICITUDES...</p>;

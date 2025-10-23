@@ -4,14 +4,14 @@ export default class EventoSolidarioExterno{
         this.eventoId = "EVT-"+ id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.fecha = fecha; 
+        this.fechaHora = fecha; 
     }
     constructorVacio(){
         this.organizacionId = 101;
         this.eventoId = null;
         this.nombre = "";
         this.descripcion = "";
-        this.fecha = null;
+        this.fechaHora = null;
     }
     getEventoId(){
         return this.eventoId;
@@ -28,11 +28,11 @@ export default class EventoSolidarioExterno{
     setDescripcion(descripcion){
         this.descripcion = descripcion;
     }     
-    getFecha(){
-        return this.fecha;
+    getFechaHora(){
+        return this.fechaHora;
     }   
-    setFecha(fecha){
-        this.fecha = fecha;
+    setFechaHora(fecha){
+        this.fechaHora = fecha;
     }
     
     getOrganizacionId(){

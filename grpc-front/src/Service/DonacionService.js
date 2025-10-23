@@ -210,16 +210,14 @@ export const eliminarSolicitud = async (solicitud) => {
 };
 }
 
-//TODO: a partir de la vista de solicitudes, un boton de transferir donaciones
-
 export const transferirDonaciones = async (transferData) => {
     try {
         console.log("Transferencia que se envía:", transferData);
-        const url = `${MESSAGE_QUEUE_URL}/transferencia`;
+        const url = `${MESSAGE_QUEUE_URL}/transferir`;
         console.log("URL de transferencia:", url);
 
         const response = await fetch(url, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
