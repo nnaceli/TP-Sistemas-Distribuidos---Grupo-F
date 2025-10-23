@@ -10,36 +10,62 @@ def extraer_token():
         return None
     return auth_header.split(" ")[1]
 
-app = Flask(__name__)
 informe_excel_donaciones_bp = Blueprint('informes_donaciones', __name__)
 
 @informe_excel_donaciones_bp.route('/excel', methods=['GET'])
 def generar_informe_excel():
     try:
-        ##token = extraer_token()
-        #if not token:
-            #return jsonify({"error": "Token no proporcionado"}), 401
+        token = extraer_token()
+        if not token:
+            return jsonify({"error": "Token no proporcionado"}), 401
         
-        #donaciones = listar_las_donaciones(token)
-        #wb = Workbook()
-        #for d in donaciones:
-        #------------------------------------------------------------
+        donaciones = listar_las_donaciones(token)
 
+        # agrupacion de donaciones por categorias
+        donaciones_agrupadas = {
+            'ROPA': [],
+            'ALIMENTOS': [],
+            'JUGUETES': [],
+            'UTILES ESCOLARES': []
+        }
+        
+        for donacion in donaciones:
+            categoria = donacion.categoria.upper()
+            if categoria in donaciones_agrupadas:
+                donaciones_agrupadas[categoria].append(donacion)
+        
+        #creacion de archivo excel y escritura de datos
         wb = Workbook()
-    
-        ws = wb.active
-        ws.title = "Prototipo Donaciones"
         
-        # Encabezados
-        ws.append(['Fecha', 'Categoria', 'Cantidad']) 
-        
-        # Datos de prueba (una donación simulada)
-        ws.append(['2025-10-21', 'ALIMENTOS', 150])
-        output = io.BytesIO()
+            # se elimina hoja creada por defecto
+        if 'Sheet' in wb.sheetnames:
+            del wb['Sheet']
 
+        headers = ['Fecha de Alta', 'Descripción', 'Cantidad', 'Eliminado', 
+                   'Usuario Alta', 'Usuario Modificación']
+
+        for categoria, lista_donaciones in donaciones_agrupadas.items():
+                
+            # Crea la hoja con el nombre de la Categoría
+            ws = wb.create_sheet(title=categoria)
+            ws.append(headers) 
+            
+            # Vuelca los datos de las donaciones en esa hoja
+            for donacion in lista_donaciones:
+                ws.append([
+                    donacion.fechaAlta, 
+                    donacion.descripcion, 
+                    donacion.cantidad, 
+                    donacion.eliminado, 
+                    donacion.fechaModificacion, 
+                    donacion.usuarioModificacion,
+                ])
+                
+        # se guarda el archivo y se envía para descargar
+        output = io.BytesIO()
         wb.save(output)
         output.seek(0)
-        filename = "Informe_Donaciones_Prototipo.xlsx" 
+        filename = "Informe_Donaciones.xlsx"
         
         return Response(
             output,
