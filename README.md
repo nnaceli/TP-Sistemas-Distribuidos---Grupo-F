@@ -42,3 +42,10 @@ Directorios:
 + kafka
     + kafka-consumer
     + kafka-producer
+
++ grapql reports
+  + app - mediador entre bdd y queries
+  + queries
+  + database
+  + schema - definicion SDL de nuestro modulo
+  + models - entidades para la base de datos, usando el orm sqlalchemy

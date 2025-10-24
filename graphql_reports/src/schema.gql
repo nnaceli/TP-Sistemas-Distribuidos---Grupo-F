@@ -1,0 +1,28 @@
+type Query {
+    listarDonacionesRecibidas: [DonacionRecibida]
+    listarDonacionesTransferidas: [DonacionTransferida]
+}
+
+type DonacionRecibida {
+    id: ID!
+    cantidad: Int!
+    categoria: String!
+    descripcion: String!
+    eliminado: Boolean!
+    fecha_alta: String!
+    fecha_modificacion: String
+    usuario_alta: String!
+    usuario_modificacion: String
+}
+
+type DonacionTransferida {
+    id: ID!
+    cantidad: Int!
+    categoria: String!
+    descripcion: String!
+    eliminado: Boolean!
+    fecha_alta: String!
+    fecha_modificacion: String
+    usuario_alta: String!
+    usuario_modificacion: String
+}
