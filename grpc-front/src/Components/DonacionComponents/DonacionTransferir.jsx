@@ -1,34 +1,25 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DonacionCategoria } from "../../Models/DonacionCategoria";
 import { transferirDonaciones } from "../../Service/DonacionService";
-import "./DonacionTransferir.css";
-
+import "../../CSS/DonacionTransferir.css";
 const emptyDonacion = () => ({
   categoria: "",
   descripcion: "",
   cantidad: 1,
 });
 
-export default function DonacionTransferir({ organizacionInicial = "101" }) {
-  const navigate = useNavigate();
-  const [organizacionId] = useState(organizacionInicial);
-  const [solicitudId, setSolicitudId] = useState("SOL-");
+export default function DonacionTransferir() {
+  const location = useLocation(); 
+  const solicitud = location.state?.solicitud; 
+
+  const [organizacionId] = useState(solicitud?.organizacionId || "0");
+  const [solicitudId] = useState(solicitud?.solicitudId || "SOL-");
   const [donaciones, setDonaciones] = useState([emptyDonacion()]);
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   const categorias = Object.values(DonacionCategoria || {});
-
-  const handleSolicitudIdChange = (e) => {
-    const value = e.target.value;
-    if (value === "SOL-") {
-      setSolicitudId(value);
-      return;
-    }
-    if (value.startsWith("SOL-")) {
-      const numbers = value.substring(4);
-      if (numbers === "" || /^\d+$/.test(numbers)) setSolicitudId(value);
-    }
-  };
 
   const handleDonacionChange = (index, field, value) => {
     setDonaciones((prev) => prev.map((d, i) => (i === index ? { ...d, [field]: value } : d)));
@@ -38,24 +29,26 @@ export default function DonacionTransferir({ organizacionInicial = "101" }) {
   const removeDonacion = (index) =>
     setDonaciones((prev) => (prev.length <= 1 ? prev : prev.filter((_, i) => i !== index)));
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const payload = {
-      solicitudId: solicitudId,
-      organizacionId: Number(organizacionId),
-      donaciones: donaciones.map((d) => ({
-        categoria: d.categoria?.trim(),
-        descripcion: d.descripcion?.trim(),
-        cantidad: Number(d.cantidad),
-      })),
-    };
-
+    if (!window.confirm(`¿Confirmar transferencia de donaciones para la solicitud "${solicitudId}" a la ONG ${organizacionId}?`)) return;
     try {
+      const payload = {
+        solicitudId: solicitud.solicitudId,
+        organizacionId: solicitud.organizacionId,
+        donaciones: donaciones.map(d => ({
+          categoria: d.categoria.trim(),
+          descripcion: d.descripcion.trim(),
+          cantidad: Number(d.cantidad) || 0
+        }))
+      };
       await transferirDonaciones(payload);
-      navigate("/transferencias");
+      alert(`Transferencia para ${solicitud.solicitudId} notificada correctamente.`);
+      navigate('/solicitud-donaciones');
     } catch (err) {
-      alert("Error al transferir: " + (err?.message || err));
+      console.error('Error al transferir:', err);
+      setError(err.message || String(err));
+      alert(`Error al transferir: ${err.message || err}`);
     }
   };
 
@@ -71,10 +64,7 @@ export default function DonacionTransferir({ organizacionInicial = "101" }) {
         <input
           type="text"
           value={solicitudId}
-          onChange={handleSolicitudIdChange}
-          pattern="SOL-\d*"
-          placeholder="SOL-123"
-          required
+          readOnly aria-readonly="true"
         />
       </div>
 
