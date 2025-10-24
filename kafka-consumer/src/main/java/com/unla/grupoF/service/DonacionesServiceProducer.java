@@ -54,7 +54,7 @@ public class DonacionesServiceProducer {
             throw new Exception("El cuerpo del request esta incompleto o es nulo");
         }
 
-        String topic = "transferencia-donaciones101";
+        String topic = "transferencia-donaciones" + dto.getOrganizacionId();
         String mensaje = objectMapper.writeValueAsString(dto);
         kafkaProducer.enviarMensaje(topic, mensaje);
     }
