@@ -1,0 +1,4 @@
+flask
+ariadne
+sqlalchemy
+psycopg2-binary
