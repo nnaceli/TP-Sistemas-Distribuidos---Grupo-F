@@ -3,7 +3,7 @@ from db import Base
 from datetime import datetime
 
 class Donacion(Base):
-    __tablename__ = "donaciones"  
+    __tablename__ = "donacion"  
 
     id = Column(Integer, primary_key=True, index=True)
     categoria = Column(String, nullable=False)

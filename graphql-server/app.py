@@ -5,7 +5,6 @@ from db import SessionLocal
 from models import Donacion
 from datetime import datetime
 
-# --- 1. Definimos el esquema (SDL) ---
 type_defs = """
     type ResultadoDonaciones {
         categoria: String
@@ -23,64 +22,48 @@ type_defs = """
     }
 """
 
-# --- 2. Definimos la lógica (resolvers) ---
 query = QueryType()
 
 @query.field("informeDonaciones")
 def resolve_informe_donaciones(_, info, categoria=None, fechaInicio=None, fechaFin=None, eliminado=None):
-    donaciones = [
-        {"categoria": "Ropa", "cantidad": 10, "eliminado": False, "fecha_alta": "2025-01-03"},
-        {"categoria": "Ropa", "cantidad": 20, "eliminado": False, "fecha_alta": "2025-02-05"},
-        {"categoria": "Alimentos", "cantidad": 5, "eliminado": True, "fecha_alta": "2025-03-10"},
-        {"categoria": "Alimentos", "cantidad": 15, "eliminado": False, "fecha_alta": "2025-01-20"},
-    ]
+    db = SessionLocal()  # abrir sesión con la base
+    q = db.query(Donacion)
 
-    from datetime import datetime
+    # Aplicar filtros según los parámetros del GraphQL
+    if categoria:
+        q = q.filter(Donacion.categoria == categoria)
+    if eliminado == "si":
+        q = q.filter(Donacion.eliminado == True)
+    if eliminado == "no":
+        q = q.filter(Donacion.eliminado == False)
+    if fechaInicio:
+        q = q.filter(Donacion.fecha_alta >= datetime.fromisoformat(fechaInicio))
+    if fechaFin:
+        q = q.filter(Donacion.fecha_alta <= datetime.fromisoformat(fechaFin))
 
-    def to_date(s):
-        if not s:
-            return None
-        return datetime.fromisoformat(s)
-
-    d_start = to_date(fechaInicio)
-    d_end = to_date(fechaFin)
-
-    filtered = []
-    for d in donaciones:
-        if categoria and d["categoria"] != categoria:
-            continue
-        if eliminado == "si" and not d["eliminado"]:
-            continue
-        if eliminado == "no" and d["eliminado"]:
-            continue
-        if d_start or d_end:
-            fecha = datetime.fromisoformat(d["fecha_alta"])
-            if d_start and fecha < d_start:
-                continue
-            if d_end and fecha > d_end:
-                continue
-        filtered.append(d)
+    donaciones = q.all()
 
     resultado = {}
-    for d in filtered:
-        key = (d["categoria"], d["eliminado"])
-        resultado[key] = resultado.get(key, 0) + d["cantidad"]
+    for d in donaciones:
+        key = (d.categoria, d.eliminado)
+        resultado[key] = resultado.get(key, 0) + d.cantidad
+
+    db.close()
 
     return [
         {"categoria": k[0], "eliminado": k[1], "totalCantidad": v}
         for k, v in resultado.items()
     ]
 
-# --- 3. Creamos el esquema ejecutable ---
+
 schema = make_executable_schema(type_defs, query)
 
-# --- 4. Servidor Flask ---
 app = Flask(__name__)
-explorer_html = ExplorerGraphiQL().html(None)  # interfaz web moderna
+explorer_html = ExplorerGraphiQL().html(None)  
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
-    return explorer_html, 200  # 👈 cambia esta línea
+    return explorer_html, 200  
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
