@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarEventos, eliminarEvento } from '../../Service/EventoSolidarioService';
+import { listarEventos, eliminarEvento, exponerEvento, inscribirUsuario } from '../../Service/EventoSolidarioService';
 import '../../CSS/EventoSolidarioList.css'; // Asegúrate de crear este archivo CSS
 
 export const EventoSolidarioList = () => {
@@ -38,6 +38,54 @@ export const EventoSolidarioList = () => {
                 setError(`Error al eliminar: ${err.message}`);
             }
         }
+    };
+
+    const handleExponer = async (id,nombre) => {
+        if (window.confirm(`¿Está seguro de exponer el evento a otras organizaciones: "${nombre}"?`)) {
+            try {
+                await exponerEvento(id); 
+                
+                alert(`Evento "${nombre}" (ID: ${id}) expuesto a otras organizaciones.`);
+            } catch (err) {
+                console.error("Error al exponer el evento:", err);
+                setError(`Error al exponer evento: ${err.message}`);
+            }
+        }
+    }
+
+    const handleInscribirse = async (id, nombre) => {
+        const userSession = JSON.parse(localStorage.getItem('userSession'));
+        const username = userSession?.username;
+
+        if (!username) {
+            setError('Usuario no identificado');
+            return;
+        }
+        if (window.confirm(`¿quiere inscribirse como voluntario a: "${nombre}"?`)) {
+            try {
+                await inscribirUsuario(id,username); 
+                               setEventos(prev => prev.map(evento => {
+                    if (evento.id === id) {
+                        return {
+                            ...evento,
+                            miembros: [...(evento.miembros || []), username]
+                        };
+                    }
+                    return evento;
+                }));
+                
+                alert(`Ha sido inscripto al evento`);
+            } catch (err) {
+                console.error("Error al inscribirse al evento:", err);
+                setError(`Error al inscribirse: ${err.message}`);
+            }
+        }
+    }
+
+    const isUserInscribed = (evento) => {
+        const userSession = JSON.parse(localStorage.getItem('userSession'));
+        const username = userSession?.username;
+        return evento.miembros?.includes(username);
     };
 
     // Función auxiliar para formatear la fecha
@@ -100,6 +148,17 @@ export const EventoSolidarioList = () => {
                                         onClick={() => handleEliminar(evento.id, evento.nombre)}>
                                         Eliminar
                                     </button>
+                                    <button
+                                        className={`btn-inscribirse ${isUserInscribed(evento) ? 'inscripto' : ''}`}
+                                        onClick={() => handleInscribirse(evento.id, evento.nombre)}
+                                        disabled={isUserInscribed(evento)}
+                                    >
+                                        {isUserInscribed(evento) ? 'Inscripto' : 'Inscribirse'}
+                                    </button>
+                                    <button
+                                        onClick={()=> handleExponer(evento.id, evento.nombre)}>
+                                        Exponer
+                                        </button>
                                 </td>
                             </tr>
                         ))}

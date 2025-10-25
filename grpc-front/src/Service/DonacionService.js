@@ -1,7 +1,6 @@
-import Donacion from '../Models/Donacion'; 
-import { DonacionCategoria } from '../Models/DonacionCategoria';
-
 const BASE_URL = 'http://127.0.0.1:5000/api/client/donacion';
+// A COLA DE MENSAJES
+const MESSAGE_QUEUE_URL = 'http://127.0.0.1:8085/api/donaciones';
 
 const getAuthHeaders = () => {
     const token = JSON.parse(localStorage.getItem('userSession'))?.token;
@@ -129,3 +128,119 @@ export const actualizarDonacion = async (id, donacionData) => {
         throw error;
     }
 };
+
+export const solicitarDonaciones = async (solicitudData) => {
+    try {
+        console.log("Solicitud que se envía:", solicitudData);
+        const url = `${MESSAGE_QUEUE_URL}/solicitud`;
+        console.log("URL de destino:", url);
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(solicitudData)
+                });
+            console.log("Fetch response status:", response.status, response.statusText);
+
+        if (response.status === 204) {
+            return { ok: true };
+        }
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error("Error response body:", errorBody);
+            throw new Error(`Error al solicitar donaciones: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return { ok: true, data };
+    } catch (error) {
+        console.error('Error al solicitar donaciones:', error);
+        throw error;
+    }
+}
+
+export const listarSolicitudesDonaciones = async () => {
+    try {
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/listarSolicitudes`, {
+            method: 'GET'
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al traer solicitudes de donaciones');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en traerSolicitudesDonaciones:', error);
+        throw error;
+    }   
+};
+
+export const eliminarSolicitud = async (solicitud) => {
+    try {
+        const payload = {
+            organizacionId: solicitud.organizacionId,
+            solicitudId: solicitud.solicitudId ?? solicitud.id ?? solicitud._id
+        };
+
+        if (!payload.organizacionId || !payload.solicitudId) {
+            throw new Error('organizacionId and solicitudId are required to eliminarSolicitud');
+        }
+
+        const response = await fetch(`${MESSAGE_QUEUE_URL}/baja`, {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error?.error || 'Error al eliminar solicitud de donación');
+        }
+        const data = await response.json();
+        return data.mensaje;
+    }
+    catch (error) {
+    console.error('Error en eliminarSolicitud:', error);
+    throw error;
+};
+}
+
+export const transferirDonaciones = async (transferData) => {
+    try {
+        console.log("Transferencia que se envía:", transferData);
+        const url = `${MESSAGE_QUEUE_URL}/transferir`;
+        console.log("URL de transferencia:", url);
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(transferData)
+        });
+
+        console.log("Fetch transfer response:", response.status, response.statusText);
+
+        if (response.status === 204) {
+            return { ok: true };
+        }
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error("Error response body (transferirDonaciones):", errorBody);
+            throw new Error(`Error al transferir donaciones: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return { ok: true, data };
+    } catch (error) {
+        console.error('Error en transferirDonaciones:', error);
+        throw error;
+    }
+};
+

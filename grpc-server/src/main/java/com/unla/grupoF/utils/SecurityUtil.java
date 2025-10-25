@@ -77,7 +77,7 @@ public class SecurityUtil {
                 .setSubject(username)
                 .claim("rol", rol)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // una hora
+                .setExpiration(new Date(System.currentTimeMillis() + 10000 * 60 * 60)) // una hora
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
