@@ -13,3 +13,14 @@ class Donacion(Base):
     fecha_alta = Column(DateTime, default=datetime.now)
     usuario_alta = Column(String)
     usuario_modificacion = Column(String)
+
+class FiltroDonacion(Base):
+    __tablename__ = "filtro_donacion"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, nullable=False)
+    categoria = Column(String)
+    fecha_inicio = Column(String)
+    fecha_fin = Column(String)
+    eliminado = Column(String)
+   
