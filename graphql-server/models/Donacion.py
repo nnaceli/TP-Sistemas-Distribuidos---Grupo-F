@@ -13,3 +13,5 @@ class Donacion(Base):
     fecha_alta = Column(DateTime, default=datetime.now)
     usuario_alta = Column(String)
     usuario_modificacion = Column(String)
+
+   

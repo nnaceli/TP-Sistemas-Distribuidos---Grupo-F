@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 # Configuración de conexión a PostgreSQL
 DB_NAME = "tp_grpc"
 DB_USER = "postgres"
-DB_PASS = "postgresql"
+DB_PASS = "44302429"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
