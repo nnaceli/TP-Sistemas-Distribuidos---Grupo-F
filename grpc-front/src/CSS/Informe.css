@@ -120,3 +120,48 @@
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
+
+
+/* Contenedor general de la respuesta */
+.response-area {
+  margin-top: 1.5rem;
+}
+
+/* Mensaje de carga */
+.loading-message {
+  text-align: center;
+  padding: 1rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* Mensaje de error de la API (distinto al error de validación) */
+.api-error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #c62828;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+/* Contenedor de la respuesta JSON exitosa */
+.api-response-container {
+  margin-top: 1.5rem;
+}
+
+.api-response-container h3 {
+  color: #2e7d32; /* Verde oscuro */
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* Estilo para mostrar el JSON "bonito" */
+.api-response-container pre {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto; /* Para scroll horizontal si el JSON es muy ancho */
+  font-family: 'Courier New', Courier, monospace;
+}

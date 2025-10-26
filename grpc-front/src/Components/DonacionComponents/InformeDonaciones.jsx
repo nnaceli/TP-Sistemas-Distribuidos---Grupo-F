@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import '../../CSS/Informe.css';
+import { generarInformeDonaciones } from '../../Service/InformeService.js';
 
 const InformeForm = () => {
+    const [isLoading, setIsLoading] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const [apiError, setApiError] = useState(null);
   const [tipoDonacion, setTipoDonacion] = useState('recibidas');
   const [filtros, setFiltros] = useState({
     eliminado: {
@@ -62,7 +66,7 @@ const InformeForm = () => {
     }
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const algunCampoSeleccionado = Object.values(campos).some(valor => valor === true);
     if (!algunCampoSeleccionado) {
@@ -70,6 +74,10 @@ const InformeForm = () => {
       return;
     }
     setErrorCampos('');
+
+    setIsLoading(true);
+    setApiResponse(null);
+    setApiError(null);
 
     const filtrosAplicados = {
       eliminado: filtros.eliminado.activo ? filtros.eliminado.valor : null,
@@ -83,8 +91,14 @@ const InformeForm = () => {
       camposInforme: campos,
     };
     
-    console.log('Datos del informe a generar:', formData);
-    alert('Formulario listo para enviar (revisa la consola para ver los datos)');
+    const response = await generarInformeDonaciones(formData);
+    if (response.error) {
+        setApiError(response.error);
+    } else {
+        setApiResponse(response);
+    }
+      // 7. Dejar de cargar (tanto en éxito como en error)
+    setIsLoading(false);
   };
 
   return (
@@ -227,10 +241,37 @@ const InformeForm = () => {
           </div>
           {errorCampos && <p className="error-message">{errorCampos}</p>}
         </fieldset>
-        <button type="submit" className="submit-button">
-          Generar Informe
+        <button type="submit" className="submit-button" disabled={isLoading}>
+          {isLoading ? 'Generando Informe...' : 'Generar Informe'}
         </button>
       </form>
+
+      {/* --- NUEVA SECCIÓN DE RESPUESTA --- */}
+      <div className="response-area">
+        {/* Mensaje de Carga */}
+        {isLoading && (
+          <div className="loading-message">
+            Consultando la base de datos...
+          </div>
+        )}
+
+        {apiError && (
+          <div className="api-error-message">
+            <strong>Error:</strong> {apiError}
+          </div>
+        )}
+        {apiResponse && (
+          <div className="api-response-container">
+            <h3>Informe Generado Exitosamente</h3>
+            <pre>
+              <code>
+                {JSON.stringify(apiResponse, null, 2)}
+              </code>
+            </pre>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };
