@@ -5,7 +5,6 @@ from db import SessionLocal
 from models import Donacion, FiltroDonacion
 from datetime import datetime
 
-# --- 1. Definimos el esquema (SDL) ---
 type_defs = """
     type ResultadoDonaciones {
         categoria: String
@@ -48,18 +47,16 @@ type_defs = """
     }
 """
 
-# --- 2. Definimos la lógica (resolvers) ---
 
 query = QueryType()
 mutation = MutationType()
 
-# Resolver del punto 1: Informe de donaciones
+
 @query.field("informeDonaciones")
 def resolve_informe_donaciones(_, info, categoria=None, fechaInicio=None, fechaFin=None, eliminado=None):
     db = SessionLocal()
     q = db.query(Donacion)
 
-    # Aplicar filtros opcionales
     if categoria:
         q = q.filter(Donacion.categoria == categoria)
     if eliminado == "si":
@@ -73,7 +70,6 @@ def resolve_informe_donaciones(_, info, categoria=None, fechaInicio=None, fechaF
 
     donaciones = q.all()
 
-    # Agrupar resultados
     resultado = {}
     for d in donaciones:
         key = (d.categoria, d.eliminado)
@@ -87,7 +83,6 @@ def resolve_informe_donaciones(_, info, categoria=None, fechaInicio=None, fechaF
     ]
 
 
-# Resolver para listar filtros guardados
 @query.field("listarFiltrosDonaciones")
 def resolve_listar_filtros_donaciones(_, info):
     db = SessionLocal()
@@ -107,7 +102,6 @@ def resolve_listar_filtros_donaciones(_, info):
     ]
 
 
-# Mutación para guardar filtro
 @mutation.field("guardarFiltroDonaciones")
 def resolve_guardar_filtro_donaciones(_, info, filtro):
     db = SessionLocal()
@@ -133,7 +127,6 @@ def resolve_guardar_filtro_donaciones(_, info, filtro):
     }
 
 
-# Mutación para editar filtro
 @mutation.field("editarFiltroDonaciones")
 def resolve_editar_filtro_donaciones(_, info, id, filtro):
     db = SessionLocal()
@@ -142,7 +135,7 @@ def resolve_editar_filtro_donaciones(_, info, id, filtro):
         db.close()
         return None
 
-    # Actualizar solo los campos enviados
+
     f.nombre = filtro.get("nombre", f.nombre)
     f.categoria = filtro.get("categoria", f.categoria)
     f.fecha_inicio = filtro.get("fechaInicio", f.fecha_inicio)
@@ -163,7 +156,6 @@ def resolve_editar_filtro_donaciones(_, info, id, filtro):
     }
 
 
-# Mutación para eliminar filtro
 @mutation.field("eliminarFiltroDonaciones")
 def resolve_eliminar_filtro_donaciones(_, info, id):
     db = SessionLocal()
@@ -176,13 +168,11 @@ def resolve_eliminar_filtro_donaciones(_, info, id):
     db.close()
     return True
 
-
-# --- 3. Creamos el esquema ejecutable ---
 schema = make_executable_schema(type_defs, [query, mutation])
 
-# --- 4. Servidor Flask ---
+
 app = Flask(__name__)
-explorer_html = ExplorerGraphiQL().html(None)  # Interfaz visual moderna
+explorer_html = ExplorerGraphiQL().html(None)  
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
