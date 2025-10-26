@@ -1,3 +1,9 @@
+#Python
+*__pycache__/
+*.py[codz]
+*$py.class
+*.pyc
+
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -18,8 +24,3 @@ target/
 *.iws
 *.iml
 *.ipr
-
-#Python
-__pycache__/
-*.py[codz]
-*$py.class
