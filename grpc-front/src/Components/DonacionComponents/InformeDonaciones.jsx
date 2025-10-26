@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import '../../CSS/Informe.css';
-import { generarInformeDonaciones, exportarEnExcelDonaciones } from '../../Service/InformeService.js';
+import { generarInformeDonaciones, exportarEnExcelDonaciones, guardarFiltroDonaciones } from '../../Service/InformeService.js';
 
 const InformeForm = () => {
     const [isLoading, setIsLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [apiError, setApiError] = useState(null);
   const [tipoDonacion, setTipoDonacion] = useState('recibidas');
+  const [ guardarFiltro, setGuardar ] = useState(false);
   const [filtros, setFiltros] = useState({
     eliminado: {
       activo: true,
@@ -25,7 +26,7 @@ const InformeForm = () => {
   const [campos, setCampos] = useState({
     categoria: false,
     eliminado: false,
-    cantidadTotal: false,
+    totalCantidad: false,
   });
   const [errorCampos, setErrorCampos] = useState('');
 
@@ -92,6 +93,16 @@ const InformeForm = () => {
     };
     
     const response = await generarInformeDonaciones(formData);
+    if (guardarFiltro) {
+      const data= {
+        nombre: `Filtro ${tipoDonacion} - ${new Date().toISOString()}`,
+        categoria: filtrosAplicados.categoria,
+        fechaInicio: filtrosAplicados.rangoFechas ? filtrosAplicados.rangoFechas.desde : null,
+        fechaFin: filtrosAplicados.rangoFechas ? filtrosAplicados.rangoFechas.hasta : null,
+        eliminado: filtrosAplicados.eliminado,
+      }
+    await guardarFiltroDonaciones( data)
+    }
     if (response.error) {
         setApiError(response.error);
     } else {
@@ -229,6 +240,17 @@ const InformeForm = () => {
               )}
             </div>
           </div>
+          {/* tildar para guardar filtros */}
+          <div>
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                name="guardarFiltro"
+                onChange={() => setGuardar(prev => !prev)}
+              />
+              Guardar este filtro para futuros informes
+            </label>
+          </div>
         </fieldset>
         <fieldset className="form-fieldset">
           <legend className="form-legend">Campos a Incluir (Obligatorio)</legend>
@@ -254,8 +276,8 @@ const InformeForm = () => {
             <label className="checkbox-label">
               <input
                 type="checkbox"
-                name="cantidadTotal"
-                checked={campos.cantidadTotal}
+                name="totalCantidad"
+                checked={campos.totalCantidad}
                 onChange={handleCampoChange}
               />
               Cantidad Total
