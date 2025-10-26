@@ -1,8 +1,10 @@
 #Python
 *__pycache__/
+*__pycache__
 *.py[codz]
 *$py.class
 *.pyc
+__pycache__/
 
 HELP.md
 target/
