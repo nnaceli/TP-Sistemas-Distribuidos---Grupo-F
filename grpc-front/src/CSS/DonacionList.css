@@ -110,8 +110,8 @@
     color: #5c4b3b;
 }
 
-.btn-crear-usuario {
-    margin-bottom: 20px;
+.btn-crear {
+    margin: 10px 10px 20px 0;
     padding: 10px 16px;
     background-color: #3e2f1c;
     color: #fff;
@@ -121,7 +121,7 @@
     font-weight: bold;
 }
 
-.btn-crear-usuario:hover {
+.btn-crear:hover {
     background-color: #5a422c;
 }
 
@@ -139,3 +139,14 @@
 .btn-editar:hover {
     background-color: #6b4f3b;
 }
+
+.btn-eliminar {
+    margin-left: 8px;
+    padding: 6px 10px;
+    background-color: #a94442;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}   

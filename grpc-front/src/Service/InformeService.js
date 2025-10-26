@@ -9,7 +9,8 @@ const getAuthHeaders = () => {
 };
 
 export const generarInformeDonaciones = async (formData) => {
-    const response = await fetch(`${BASE_URL}/donaciones`, {
+    try{
+      const response = await fetch(`${BASE_URL}/donaciones`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(formData),
@@ -18,4 +19,7 @@ export const generarInformeDonaciones = async (formData) => {
         throw new Error('Error al generar el informe de donaciones');
     }
     return response.json();
+    } catch (error) {
+        return { error: error.message };
+    }
 };

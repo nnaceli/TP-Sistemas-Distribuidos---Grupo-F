@@ -97,7 +97,6 @@ const InformeForm = () => {
     } else {
         setApiResponse(response);
     }
-      // 7. Dejar de cargar (tanto en éxito como en error)
     setIsLoading(false);
   };
 
@@ -246,9 +245,7 @@ const InformeForm = () => {
         </button>
       </form>
 
-      {/* --- NUEVA SECCIÓN DE RESPUESTA --- */}
       <div className="response-area">
-        {/* Mensaje de Carga */}
         {isLoading && (
           <div className="loading-message">
             Consultando la base de datos...
