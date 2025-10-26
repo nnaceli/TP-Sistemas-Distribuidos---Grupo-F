@@ -3,43 +3,20 @@ from openpyxl import Workbook
 import io
 import requests
 from grpc import RpcError 
-# from GrpcService.GrpcDonacionService import listar_las_donaciones # Eliminamos esta importación
 
-# Asumo que el puerto por defecto de Spring Boot es 8080. AJUSTA SI ES NECESARIO.
-JAVA_REST_BASE_URL = "http://localhost:8080" 
+JAVA_REST_BASE_URL = "http://localhost:8081/api/rest"
 
-class Donacion:
-    """Clase simple para simular el objeto de donación completo que devuelve Java."""
-    def __init__(self, data):
-        self.fechaAlta = data.get('fechaAlta', '')
-        self.descripcion = data.get('descripcion', '')
-        self.cantidad = data.get('cantidad', 0)
-        self.eliminado = data.get('eliminado', False)
-        # Campos de usuario y modificación completos
-        self.usuarioAlta = data.get('usuarioAlta', '')
-        self.usuarioModificacion = data.get('usuarioModificacion', '')
-        self.categoria = data.get('categoria', 'OTRAS')
 
-def listar_las_donaciones_completas(token):
-    """
-    Llama al servicio REST completo en el servidor Java para obtener todas las donaciones.
-    El Token se pasa para la autenticación en el servidor Java.
-    """
-    endpoint = f"{JAVA_REST_BASE_URL}/api/donaciones/listar-todas"
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-    
-    # Intenta hacer la petición
-    response = requests.get(endpoint, headers=headers)
-    response.raise_for_status() # Lanza un error HTTP si la respuesta no es 2xx
-
-    data = response.json()
-    
-    # Convertimos los diccionarios JSON en objetos Donacion para mantener la lógica original del código
-    donaciones_completas = [Donacion(item) for item in data]
-    return donaciones_completas
+def listar_las_donaciones_completas():
+    url = "http://localhost:8081/api/rest/donaciones/traer"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Lanza excepción si el status no es 2xx
+        data = response.json()       # Asigna el contenido JSON a 'data'
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"Error al consumir el servicio: {e}")
+        return None
 
 
 def extraer_token():
@@ -53,29 +30,19 @@ informe_excel_donaciones_bp = Blueprint('informes_donaciones', __name__)
 @informe_excel_donaciones_bp.route('/excel', methods=['GET'])
 def generar_informe_excel():
     try:
-        token = extraer_token()
-        if not token:
-            return jsonify({"error": "Token no proporcionado"}), 401
-
-        donaciones = listar_las_donaciones_completas(token)
+        donaciones = listar_las_donaciones_completas()
 
         # agrupacion de donaciones por categorias
         donaciones_agrupadas = {
             'ROPA': [],
             'ALIMENTOS': [],
             'JUGUETES': [],
-            'UTILES ESCOLARES': []
+            'UTILES_ESCOLARES': []
         }
         
         for donacion in donaciones:
-            # Aseguramos que la categoría sea un string antes de intentar .upper()
-            categoria = str(donacion.categoria).upper()
-            if categoria in donaciones_agrupadas:
-                donaciones_agrupadas[categoria].append(donacion)
-            else:
+            donaciones_agrupadas[donacion['categoria']].append(donacion)
 
-                pass
-        
         #creacion de archivo excel y escritura de datos
         wb = Workbook()
         
@@ -95,12 +62,12 @@ def generar_informe_excel():
             # Vuelca los datos de las donaciones en esa hoja
             for donacion in lista_donaciones:
                 ws.append([
-                    donacion.fechaAlta, 
-                    donacion.descripcion, 
-                    donacion.cantidad, 
-                    donacion.eliminado, 
-                    donacion.usuarioAlta, 
-                    donacion.usuarioModificacion,
+                    donacion['fechaCreacion'], 
+                    donacion['descripcion'], 
+                    donacion['cantidad'], 
+                    donacion['eliminado'], 
+                    donacion['usernameCreacion'], 
+                    donacion['usernameModificacion'],
                 ])
                 
         # se guarda el archivo y se envía para descargar
