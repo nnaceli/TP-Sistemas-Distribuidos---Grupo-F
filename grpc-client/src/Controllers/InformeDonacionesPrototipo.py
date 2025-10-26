@@ -17,11 +17,9 @@ debug_bp = Blueprint('debug_donaciones', __name__)
 @debug_bp.route('/listado', methods=['GET'])
 def listar_donaciones_json():
     """
-    Endpoint de prueba para llamar al servicio REST de Java y devolver el JSON.
     URL de prueba: http://localhost:5000/api/client/debug/listado
     """
     try:
-        # **CAMBIO CLAVE: Ajustamos el endpoint a la ruta simple /donaciones**
         endpoint = f"{JAVA_REST_BASE_URL}/donaciones" 
         
         headers = {

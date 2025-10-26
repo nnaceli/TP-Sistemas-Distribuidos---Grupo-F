@@ -5,7 +5,6 @@ import requests
 from grpc import RpcError 
 # from GrpcService.GrpcDonacionService import listar_las_donaciones # Eliminamos esta importación
 
-# URL base del servidor REST de Java (informe-api-server)
 # Asumo que el puerto por defecto de Spring Boot es 8080. AJUSTA SI ES NECESARIO.
 JAVA_REST_BASE_URL = "http://localhost:8080" 
 
@@ -68,15 +67,13 @@ def generar_informe_excel():
             'UTILES ESCOLARES': []
         }
         
-        # 🚨 NOTA: Asegúrate de que el servidor Java devuelva la categoría en mayúsculas 
-        # o ajusta esta lógica de conversión.
         for donacion in donaciones:
             # Aseguramos que la categoría sea un string antes de intentar .upper()
             categoria = str(donacion.categoria).upper()
             if categoria in donaciones_agrupadas:
                 donaciones_agrupadas[categoria].append(donacion)
             else:
-                # Opcional: Manejar categorías no mapeadas
+
                 pass
         
         #creacion de archivo excel y escritura de datos
@@ -102,7 +99,6 @@ def generar_informe_excel():
                     donacion.descripcion, 
                     donacion.cantidad, 
                     donacion.eliminado, 
-                    # 🚨 CAMBIO: Incluimos los campos de usuario y modificación que faltaban antes
                     donacion.usuarioAlta, 
                     donacion.usuarioModificacion,
                 ])

@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,7 @@ enum Categoria {
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name="donacion")
 public class Donacion {
 
     @Id
