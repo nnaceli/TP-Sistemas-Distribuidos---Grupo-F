@@ -115,6 +115,12 @@ export const EventoSolidarioList = () => {
                 + Registrar Nuevo Evento
             </button>
 
+                        <button 
+                className="btn-crear" 
+                onClick={() => navigate('/informe-eventos')}>
+                Obtener Informe de Eventos
+            </button>
+
             {eventos.length === 0 ? (
                 <p>No hay eventos solidarios registrados.</p>
             ) : (

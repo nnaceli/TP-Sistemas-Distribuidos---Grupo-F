@@ -14,6 +14,14 @@ Requisitos de instalación:
   * cd grpc-client/src | "python app.py" para correr el servidor gRPC
   * cd soap-client | "python main.py" para correr el cliente SOAP
   * cd graphql-server | "python app.py" para correr el servidor graphql
+
+    * NOTA: antess de correr este servidor debemos correr el siguiente comando para crear las tablas correspondientes
+    "python"
+    "from db import Base, engine
+    from models.FiltroDonacion import FiltroDonacion
+    Base.metadata.create_all(bind=engine)
+    exit()  "
+
 + Java - JDK 17
 + Maven - 3.9.6
   * asegurarse de tener la variable de entorno PATH configurada

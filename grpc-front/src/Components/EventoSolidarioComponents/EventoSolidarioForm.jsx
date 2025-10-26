@@ -84,7 +84,7 @@ export const EventoSolidarioForm = () => {
             {isPastEvent && isEdit && <p className="warning">⚠️ Evento Pasado: Solo se puede modificar el registro de donaciones repartidas.</p>}
             {error && <p className="error-message">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
+            <form className='formulario-usuario' onSubmit={handleSubmit}>
                 <label>
                     Nombre del Evento:
                     <input 
@@ -125,7 +125,7 @@ export const EventoSolidarioForm = () => {
 
 
                 <div className="form-actions">
-                    <button type="submit" className="btn-guardar" disabled={isPastEvent && isEdit}>
+                    <button type="submit" className="btn-crear-usuario" disabled={isPastEvent && isEdit}>
                         {isEdit ? 'Guardar Cambios' : 'Registrar Evento'}
                     </button>
                     <button type="button" className="btn-cancelar" onClick={() => navigate('/eventos')}>

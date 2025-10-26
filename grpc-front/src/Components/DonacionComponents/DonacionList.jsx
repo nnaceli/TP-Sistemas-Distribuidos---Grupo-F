@@ -57,6 +57,12 @@ export const DonacionList = () => {
                 + Registrar Nueva Donación
             </button>
 
+            <button 
+                className="btn-crear" 
+                onClick={() => navigate('/informe-donaciones')}>
+                Obtener Informe de Donaciones
+            </button>
+
             <table className="donacion-table">
                 <thead>
                     <tr>
@@ -74,12 +80,12 @@ export const DonacionList = () => {
                             <td>{donacion.descripcion.substring(0, 50)}...</td>
                             <td>{donacion.cantidad}</td>
                             <td>
-                                <button onClick={() => handleEliminar(donacion.id, donacion.descripcion)}>
+                                <button className='btn-eliminar' onClick={() => handleEliminar(donacion.id, donacion.descripcion)}>
                                     Dar de baja
                                 </button>
                             </td>
                             <td>
-                                <button onClick={() => navigate(`/donaciones/editar/${donacion.id}`)}>
+                                <button className='btn-editar' onClick={() => navigate(`/donaciones/editar/${donacion.id}`)}>
                                     Modificar
                                 </button>
                             </td>

@@ -10,7 +10,6 @@ export const DonacionForm = () => {
     const isEdit = id && id !== 'nueva';
     
     const [formData, setFormData] = useState({
-        // CAMBIO 1: Usar el string como valor por defecto.
         categoria: 'ROPA',
         descripcion: '',
         cantidad: 0,
@@ -76,7 +75,7 @@ export const DonacionForm = () => {
             <h2>{isEdit ? 'Modificar Donación' : 'Registrar Donación'}</h2>
             {error && <p className="error-message">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
+            <form className='formulario-usuario' onSubmit={handleSubmit}>
                 <label>
                     Categoría:
                      <select
@@ -123,7 +122,7 @@ export const DonacionForm = () => {
                 </label>
 
                 <div className="form-actions">
-                    <button type="submit" className="btn-guardar">
+                    <button type="submit" className="btn-crear-usuario">
                         {isEdit ? 'Guardar Cambios' : 'Registrar'}
                     </button>
                     <button type="button" className="btn-cancelar" onClick={() => navigate('/donaciones')}>
