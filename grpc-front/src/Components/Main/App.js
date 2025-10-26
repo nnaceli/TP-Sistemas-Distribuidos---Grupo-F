@@ -19,6 +19,7 @@ import EventosExternosList from '../EventoSolidarioComponents/EventosExternosLis
 import { SolicitudDonacionList } from '../DonacionComponents/SolicitudDonacionList';
 import DonacionTransferir from '../DonacionComponents/DonacionTransferir';
 import InformeDonaciones from '../DonacionComponents/InformeDonaciones';
+import InformeEventos from '../EventoSolidarioComponents/InformeEventos';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/solicitud-donaciones/transferir" element={<DonacionTransferir />} />
                 <Route path="/otros-eventos" element={<EventosExternosList />} />
                 <Route path="/informe-donaciones" element={<InformeDonaciones/>} />
+                <Route path="/informe-eventos" element={<InformeEventos/>} />
               </Routes>
             </MasterLayout>
           } />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../CSS/Informe.css';
-import { generarInformeDonaciones } from '../../Service/InformeService.js';
+import { generarInformeDonaciones, exportarEnExcelDonaciones } from '../../Service/InformeService.js';
 
 const InformeForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +99,29 @@ const InformeForm = () => {
     }
     setIsLoading(false);
   };
+
+  const handleExcelExport = async (data, tipo) => {
+    try {
+      const response = await exportarEnExcelDonaciones(data, tipo);
+      if (response.error) {
+          alert(`Error al exportar a Excel: ${response.error}`);
+      } else {
+          const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `informe_donaciones_${tipo}.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+      }
+    }
+    catch (error) {
+      alert(`Error al exportar a Excel: ${error.message}`);
+    }
+  };
+
 
   return (
     <div className="form-container">
@@ -265,6 +288,13 @@ const InformeForm = () => {
                 {JSON.stringify(apiResponse, null, 2)}
               </code>
             </pre>
+            <button
+              className="btn-crear"
+              onClick={() => {
+                handleExcelExport(apiResponse, tipoDonacion);
+              }}>
+              Exportar a Excel
+            </button>
           </div>
         )}
       </div>
