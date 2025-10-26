@@ -18,6 +18,7 @@ import SolicitudDonacionForm from '../DonacionComponents/SolicitudDonacionForm';
 import EventosExternosList from '../EventoSolidarioComponents/EventosExternosList';
 import { SolicitudDonacionList } from '../DonacionComponents/SolicitudDonacionList';
 import DonacionTransferir from '../DonacionComponents/DonacionTransferir';
+import InformeDonaciones from '../DonacionComponents/InformeDonaciones';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/solicitud-donaciones/nueva" element={<SolicitudDonacionForm/>} />
                 <Route path="/solicitud-donaciones/transferir" element={<DonacionTransferir />} />
                 <Route path="/otros-eventos" element={<EventosExternosList />} />
+                <Route path="/informe-donaciones" element={<InformeDonaciones/>} />
               </Routes>
             </MasterLayout>
           } />
