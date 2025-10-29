@@ -1,7 +1,7 @@
 import { InformeEventoDTO } from "../Models/InformeEventoDTO";
 
 const BASE_URL = 'http://127.0.0.1:5005/';
-const EXPORT_URL = '';
+const BASE_URL_EXCEL = 'http://127.0.0.1:5000/api/client/reportes_donaciones'
 
 const dataForGraphQL = (formData) => {
     return {
@@ -120,11 +120,12 @@ export const guardarFiltroDonaciones = async (formData) => {
     }
 };
 
-//TODO: Implementar la exportación a Excel
-export const exportarEnExcelDonaciones = async (informeData, tipoDonacion) => {
+
+export const exportarEnExcelDonaciones = async () => {
     try {
-        console.log('IMPLEMENTAR: Exportando informe de donaciones a Excel:', informeData, tipoDonacion);
+        window.location.href = `${BASE_URL_EXCEL}/excel`; 
+        console.log('Solicitud de descarga enviada. El navegador gestionará la descarga.');
     } catch (error) {
-        console.error('Error al exportar el informe de donaciones a Excel:', error);
+        console.error('Error al intentar iniciar la descarga:', error);
     }
 };

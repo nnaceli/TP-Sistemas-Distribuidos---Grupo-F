@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listarDonaciones, eliminarDonacion } from '../../Service/DonacionService';
+import { listarDonaciones, eliminarDonacion} from '../../Service/DonacionService';
+import { exportarEnExcelDonaciones } from '../../Service/InformeService';
 import { DonacionCategoria } from '../../Models/DonacionCategoria';
 import '../../CSS/DonacionList.css';
 
@@ -44,6 +45,14 @@ export const DonacionList = () => {
         }
     };
 
+    const handleExportarExcel = async () => {
+        try {
+            exportarEnExcelDonaciones(); 
+        } catch (err) {
+                console.error("Error al descargar el informe:", err);
+        }
+    };
+
     if (loading) return <p className="loading">Cargando inventario de donaciones...</p>;
     if (error) return <p className="error">Error: {error}</p>;
 
@@ -61,6 +70,12 @@ export const DonacionList = () => {
                 className="btn-crear" 
                 onClick={() => navigate('/informe-donaciones')}>
                 Obtener Informe de Donaciones
+            </button>
+
+            <button 
+                className="btn-excel" 
+                onClick={handleExportarExcel}>
+                Obtener Informe Excel de Donaciones
             </button>
 
             <table className="donacion-table">

@@ -121,6 +121,17 @@
     font-weight: bold;
 }
 
+.btn-excel {
+    margin: 10px 10px 20px 0;
+    padding: 10px 16px;
+    background-color: #2d572c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 .btn-crear:hover {
     background-color: #5a422c;
 }
