@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class EventoDTO {
     private Long organizacionId;
     private String eventoId;
