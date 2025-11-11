@@ -26,7 +26,6 @@ public class KafkaComentarioListener {
     )
     public void consumirComentario(ComentarioEventoDTO comentarioDTO) {
         
-        // El error de getIdEventoExterno debería desaparecer luego de 'mvn install'
         System.out.println("Mensaje recibido de Kafka. Procesando: ID Evento " + comentarioDTO.getIdEventoExterno()); 
 
         // Delegar la lógica de guardado al servicio

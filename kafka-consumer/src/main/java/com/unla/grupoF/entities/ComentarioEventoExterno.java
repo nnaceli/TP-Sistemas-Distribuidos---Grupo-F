@@ -75,7 +75,6 @@ public class ComentarioEventoExterno {
 
     // --- SETTERS (La parte que no estaba reconociendo) ---
 
-    // El setter de ID autogenerado no se necesita, pero lo incluyo por si acaso.
     public void setId(Long id) {
         this.id = id;
     }
